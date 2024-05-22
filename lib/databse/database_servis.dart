@@ -527,8 +527,10 @@ class DatabaseServie {
       print("kiruk");
     }
     ///hilangin nomor pada arry di ujing firebase
-    ///tambah M atau meter di barang yang sesuai
+    ///tambah M atau meter di barang yang sesuai pada tampilan riwayat
     ///buat format jam lebih bagus (00.01) jangan (0:1)
+    ///cari tau download data di firebase 
+    ///cari tau download data di firebase 
     ///cari tau download data di firebase 
   }
 
