@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "987521462078",
+    "project_id": "aplikasi-peminjman",
+    "storage_bucket": "aplikasi-peminjman.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:987521462078:android:4e7a104aa3471dcc1e466f",
+        "android_client_info": {
+          "package_name": "com.example.aplikasi_peminjaman"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUbfStAAw8KnHLDoUXQ2UrBVHmrZbYZqE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
