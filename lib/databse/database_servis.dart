@@ -402,67 +402,138 @@ class DatabaseServie {
 
   ///laporan peminjman
   ReportPinjam(String Namapeminjam, String NoTelpon, List NamaBarang,
-      List KodeAtauJumlahBarang, List Berkode) async {
+      List KodeAtauJumlahBarang, List Berkode, List BerM) async {
     DateTime now = new DateTime.now();
+    String jamSekarang = "";
+    String menitSekarang = "";
     String date = now.day.toString() +
         "-" +
         now.month.toString() +
         "-" +
         (now.year.toString());
+
     int id = 0;
+    bool isPeminjamSama = false;
+    int percobaanPeminjaman = 1;
+
     for (int i = 0; i < NamaBarang.length; i++) {
-      //build id untuk setiap field
-      await ReportCollection.get().then((QuerySnapshot snapshot) {
-        snapshot.docs.forEach((element) {
-          if (int.parse(element.id.toString()) >= id) {
-            id = int.parse(element.id.toString()) + 1;
-          }
+      //sama id untuk sama nama dan no telepon
+      if (!Berkode[i]) {
+        await ReportCollection.get().then((QuerySnapshot snapshot) {
+          snapshot.docs.forEach((element) {
+            print("object");
+            if (Namapeminjam == element["NamaPeminjam"] &&
+                NoTelpon == element["NoTelpon"] &&
+                NamaBarang[i] == element["NamaBarang"]) {
+              id = int.parse(element.id);
+              isPeminjamSama = true;
+              percobaanPeminjaman = element["percobaanPeminjaman"] + 1;
+              print("percobaan peminjaman : " + percobaanPeminjaman.toString());
+            }
+          });
         });
-      });
+      }
+      //build id untuk setiap field
+      if (!isPeminjamSama) {
+        await ReportCollection.get().then((QuerySnapshot snapshot) {
+          snapshot.docs.forEach((element) {
+            if (int.parse(element.id.toString()) >= id) {
+              id = int.parse(element.id.toString()) + 1;
+            }
+          });
+        });
+      }
+
+      //membaca jam dan menit sekarang
+      if (int.parse(now.hour.toString()) < 10) {
+        jamSekarang = "0" + now.hour.toString();
+      } else {
+        jamSekarang = now.hour.toString();
+      }
+      if (int.parse(now.minute.toString()) < 10) {
+        menitSekarang = "0" + now.minute.toString();
+      } else {
+        menitSekarang = now.minute.toString();
+      }
+
+      print("jam : " + jamSekarang);
+      print("menit : " + menitSekarang);
 
       //proses pembuatan data report
+
       if (Berkode[i]) {
         //barang berkode
         await ReportCollection.doc(id.toString()).set({
           "NamaPeminjam": Namapeminjam,
           "NoTelpon": NoTelpon,
           "NamaBarang": NamaBarang[i],
-          "JumlahPeminjaman": 1.toString(),
-          "KodeBarang": KodeAtauJumlahBarang[i],
-          "jamPeminjaman": now.hour.toString() + ":" + now.minute.toString(),
-          "tanggalPeminjaman": date.toString(),
+          "JumlahPeminjaman": [1.toString() + " " + 1.toString()],
+          "KodeBarang": [KodeAtauJumlahBarang[i] + " " + 1.toString()],
+          "jamPeminjaman": [
+            jamSekarang + ":" + menitSekarang + " " + 1.toString()
+          ],
+          "tanggalPeminjaman": [date.toString() + " " + 1.toString()],
           "jumlahPengembalian": [],
           "jamPengembalian": [],
           "tanggalPengembalian": [],
           "barangBerkode": true,
-          "PercobaanPengembalian": 0
+          "percobaanPeminjaman": percobaanPeminjaman,
+          "PercobaanPengembalian": 0,
+          "berM": BerM[i]
         });
       } else {
         //barang tidak berkode
-        await ReportCollection.doc(id.toString()).set({
-          "NamaPeminjam": Namapeminjam,
-          "NoTelpon": NoTelpon,
-          "NamaBarang": NamaBarang[i],
-          "JumlahPeminjaman": KodeAtauJumlahBarang[i],
-          "KodeBarang": "-",
-          "jamPeminjaman": now.hour.toString() + ":" + now.minute.toString(),
-          "tanggalPeminjaman": date.toString(),
-          "jumlahPengembalian": [],
-          "jamPengembalian": [],
-          "tanggalPengembalian": [],
-          "barangBerkode": false,
-          "PercobaanPengembalian": 0
-        });
+        if (isPeminjamSama) {
+          await ReportCollection.doc(id.toString()).update({
+            "percobaanPeminjaman": percobaanPeminjaman,
+            "JumlahPeminjaman": FieldValue.arrayUnion([
+              KodeAtauJumlahBarang[i] + " " + percobaanPeminjaman.toString()
+            ]),
+            "KodeBarang": FieldValue.arrayUnion(
+                ["-" + " " + percobaanPeminjaman.toString()]),
+            "jamPeminjaman": FieldValue.arrayUnion([
+              jamSekarang +
+                  ":" +
+                  menitSekarang +
+                  " " +
+                  percobaanPeminjaman.toString()
+            ]),
+            "tanggalPeminjaman": FieldValue.arrayUnion(
+                [date.toString() + " " + percobaanPeminjaman.toString()]),
+          });
+        } else {
+          await ReportCollection.doc(id.toString()).set({
+            "NamaPeminjam": Namapeminjam,
+            "NoTelpon": NoTelpon,
+            "NamaBarang": NamaBarang[i],
+            "JumlahPeminjaman": [KodeAtauJumlahBarang[i] + " " + 1.toString()],
+            "KodeBarang": ["-" + " " + 1.toString()],
+            "jamPeminjaman": [
+              jamSekarang + ":" + menitSekarang + " " + 1.toString()
+            ],
+            "tanggalPeminjaman": [date.toString() + " " + 1.toString()],
+            "jumlahPengembalian": [],
+            "jamPengembalian": [],
+            "tanggalPengembalian": [],
+            "barangBerkode": false,
+            "percobaanPeminjaman": percobaanPeminjaman,
+            "PercobaanPengembalian": 0,
+            "berM": BerM[i]
+          });
+        }
       }
+      isPeminjamSama = false;
     }
   }
 
   //laporan pengembalian
   ReportPengembalian(String namaPeminjam, String namaBarang,
-      int jumlahYangDiKembalikan) async {
+      String jumlahYangDiKembalikan) async {
     print("NAMA PEMINJAM : " + namaPeminjam);
     print("NAMA BARANG : " + namaBarang);
     DateTime now = new DateTime.now();
+    String jamSekarang = "";
+    String menitSekarang = "";
     String date = now.day.toString() +
         "-" +
         now.month.toString() +
@@ -471,70 +542,114 @@ class DatabaseServie {
     int idYangDipilih = 0;
     int PercobaanPengembalian = 0;
     bool isBerkode = false;
+    bool isKetemu = false;
+
+    //membaca jam dan menit sekarang
+    if (int.parse(now.hour.toString()) < 10) {
+      jamSekarang = "0" + now.hour.toString();
+    } else {
+      jamSekarang = now.hour.toString();
+    }
+    if (int.parse(now.minute.toString()) < 10) {
+      menitSekarang = "0" + now.minute.toString();
+    } else {
+      menitSekarang = now.minute.toString();
+    }
+
     //mencari id barang yang terdapat di report untuk di olah datanya
     await ReportCollection.get().then((value) => value.docs.forEach((element) {
-          print(namaBarang == element["NamaBarang"] &&
-              namaPeminjam.toLowerCase() ==
-                  element["NamaPeminjam"].toString().toLowerCase());
-          if (namaBarang == element["NamaBarang"] &&
-              namaPeminjam.toLowerCase() ==
-                  element["NamaPeminjam"].toString().toLowerCase()) {
-            idYangDipilih = int.parse(element.id);
-            isBerkode = element["barangBerkode"];
-            PercobaanPengembalian = element["PercobaanPengembalian"];
-            print("id yang dipilih REPORT : " + idYangDipilih.toString());
+          print("x : " + element["barangBerkode"].toString());
+          if (!element["barangBerkode"]) {
+            print("xy");
+            if (namaBarang == element["NamaBarang"] &&
+                namaPeminjam.toLowerCase() ==
+                    element["NamaPeminjam"].toString().toLowerCase()) {
+              idYangDipilih = int.parse(element.id);
+              isBerkode = element["barangBerkode"];
+              PercobaanPengembalian = element["PercobaanPengembalian"];
+              print("id yang dipilih REPORT (tidak berkode) : " +
+                  idYangDipilih.toString());
+              isKetemu = true;
+            }
+          } else {
+            print("XXXXXXXXXXXXXXn : " +
+                (jumlahYangDiKembalikan.toString() +
+                            " " +
+                            element["PercobaanPengembalian"].toString() ==
+                        element["KodeBarang"])
+                    .toString());
+            print(jumlahYangDiKembalikan.toString() +
+                " " +
+                element["percobaanPeminjaman"].toString() +
+                " == " +
+                element["KodeBarang"][0]);
+            if (namaBarang == element["NamaBarang"] &&
+                namaPeminjam.toLowerCase() ==
+                    element["NamaPeminjam"].toString().toLowerCase() &&
+                jumlahYangDiKembalikan.toString() +
+                        " " +
+                        element["percobaanPeminjaman"].toString() ==
+                    element["KodeBarang"][0]) {
+              idYangDipilih = int.parse(element.id);
+              isBerkode = element["barangBerkode"];
+              PercobaanPengembalian = element["PercobaanPengembalian"];
+              print("id yang dipilih REPORT (berkode) : " +
+                  idYangDipilih.toString());
+              isKetemu = true;
+            }
           }
         }));
     //proses pembuatan data report
     print(isBerkode);
     //untuk barang berkode
-    if (isBerkode) {
+    if (isKetemu) {
+      if (isBerkode) {
         PercobaanPengembalian++;
-      await ReportCollection.doc(idYangDipilih.toString()).update({
-         "PercobaanPengembalian": PercobaanPengembalian,
-        "jumlahPengembalian": 1.toString(),
-        "jamPengembalian": FieldValue.arrayUnion([
-          now.hour.toString() +
-              ":" +
-              now.minute.toString() +
-              " " +
-              PercobaanPengembalian.toString()
-        ]),
-        "tanggalPengembalian": FieldValue.arrayUnion(
-            [date.toString() + " " + PercobaanPengembalian.toString()]),
-      });
-      print("bacek");
-    } else {
-      //untuk barang tidak berkode
-      PercobaanPengembalian++;
-      await ReportCollection.doc(idYangDipilih.toString()).update({
-        "PercobaanPengembalian": PercobaanPengembalian,
-        "jumlahPengembalian": FieldValue.arrayUnion([
-          jumlahYangDiKembalikan.toString() +
-              " " +
-              PercobaanPengembalian.toString()
-        ]),
-        "jamPengembalian": FieldValue.arrayUnion([
-          now.hour.toString() +
-              ":" +
-              now.minute.toString() +
-              " " +
-              PercobaanPengembalian.toString()
-        ]),
-        "tanggalPengembalian": FieldValue.arrayUnion(
-            [date.toString() + " " + PercobaanPengembalian.toString()]),
-      });
-      print("kiruk");
+        await ReportCollection.doc(idYangDipilih.toString()).update({
+          "PercobaanPengembalian": PercobaanPengembalian,
+          "jumlahPengembalian": 1.toString(),
+          "jamPengembalian": FieldValue.arrayUnion([
+            jamSekarang +
+                ":" +
+                menitSekarang +
+                " " +
+                PercobaanPengembalian.toString()
+          ]),
+          "tanggalPengembalian": FieldValue.arrayUnion(
+              [date.toString() + " " + PercobaanPengembalian.toString()]),
+        });
+        print("bacek");
+      } else {
+        //untuk barang tidak berkode
+        PercobaanPengembalian++;
+        await ReportCollection.doc(idYangDipilih.toString()).update({
+          "PercobaanPengembalian": PercobaanPengembalian,
+          "jumlahPengembalian": FieldValue.arrayUnion([
+            jumlahYangDiKembalikan.toString() +
+                " " +
+                PercobaanPengembalian.toString()
+          ]),
+          "jamPengembalian": FieldValue.arrayUnion([
+            jamSekarang +
+                ":" +
+                menitSekarang +
+                " " +
+                PercobaanPengembalian.toString()
+          ]),
+          "tanggalPengembalian": FieldValue.arrayUnion(
+              [date.toString() + " " + PercobaanPengembalian.toString()]),
+        });
+        print("kiruk");
+      }
     }
+
     ///hilangin nomor pada arry di ujing firebase
     ///tambah M atau meter di barang yang sesuai pada tampilan riwayat
-    ///buat format jam lebih bagus (00.01) jangan (0:1)
-    ///cari tau download data di firebase 
-    ///cari tau download data di firebase 
-    ///cari tau download data di firebase 
+    ///buat format jam lebih bagus (00.01) jangan (0:1) jam 12 mlm tes
+    ///cari tau download data di firebase
+    ///cari tau download data di firebase
+    ///cari tau download data di firebase
   }
-
-  
 
   //============================================================================================================
 
@@ -555,7 +670,7 @@ class DatabaseServie {
   ///buat bisa terdeteksi sama aja dari nama huruf gedek maupun kecil
   ///buat notifikasi bukan pop up pada aksi yang  gagal maupun berhasil
   ///
-  
+
   ///===================================================================
   ///
   ///

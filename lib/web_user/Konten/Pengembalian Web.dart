@@ -1208,16 +1208,18 @@ class _Pengembalian_webState extends State<Pengembalian_web> {
                                                                                           
                                                                                         }
 
-                                                                                        //REPORT
+                                                                                        if ( !munculPopUpPengembalianKebanyakan) {
+                                                                                          //REPORT
                                                                                           print("JUmlah barang yang di kembalikan : " + KodeAtauJumlahYangDikembalikan[0].toString());
                                                                                           if(isBarangBerkodeYangAkanDikembalikan){
 
-                                                                                          await DatabaseServie().ReportPengembalian(NamaPeminjamSekarang, BarangYangDikembalikan[0], 1);
+                                                                                          await DatabaseServie().ReportPengembalian(NamaPeminjamSekarang, BarangYangDikembalikan[0], KodeAtauJumlahYangDikembalikan[0].toString());
                                                                                           }else{
 
-                                                                                          await DatabaseServie().ReportPengembalian(NamaPeminjamSekarang, BarangYangDikembalikan[0], int.parse(KodeAtauJumlahYangDikembalikan[0].toString()));
+                                                                                          await DatabaseServie().ReportPengembalian(NamaPeminjamSekarang, BarangYangDikembalikan[0], KodeAtauJumlahYangDikembalikan[0].toString());
                                                                                           }
                                                                                           print("Report berhasil didata");
+                                                                                        }
 
                                                                                         //kembalikan menjadi normal
                                                                                         HapusDataKembalikanBarang();

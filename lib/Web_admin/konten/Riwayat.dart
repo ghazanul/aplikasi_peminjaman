@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_interpolation_to_compose_strings
+
 import 'dart:async';
 import 'dart:typed_data';
 
@@ -25,10 +27,13 @@ class DataPeminjam {
   String NamaPeminjam = "";
   String NoTelpon = "";
   String NamaBarang = "";
-  String KodeBarang = "";
-  String JumlahPeminjaman = "";
-  String Jampeminjam = "";
-  String TanggalPeminjman = "";
+  bool berM = false;
+  List KodeBarang = [];
+  List JumlahPeminjaman = [];
+  List Jampeminjam = [];
+  List TanggalPeminjman = [];
+  int percobaanPeminjaman = 0;
+
   int PercobaanPengembalian = 0;
   List jumlahPengembalian = [];
   List jamPengembalian = [];
@@ -41,46 +46,62 @@ class _RiwayatState extends State<Riwayat> {
 
   List<DataPeminjam> dataPeminjam = [];
 
+  String pemisahSpasi(String data) {
+    String hasil = "";
+    for (int i = 0; i < data.length; i++) {
+      if (data[i] == " ") {
+        return hasil;
+      } else {
+        hasil += data[i];
+      }
+    }
+    return hasil;
+  }
+
   mengambilDataReportPinjman() async {
     //pengambilan data pada database report satu persatu sesuai dengan class pada datapeminjam
-    await FirebaseFirestore.instance
-        .collection("Report")
-        .get()
-        .then((value) => value.docs.forEach((element) {
-              DataPeminjam DataSementar = new DataPeminjam();
-              DataSementar.NamaPeminjam = element["NamaPeminjam"];
-              DataSementar.NoTelpon = element["NoTelpon"];
-              DataSementar.NamaBarang = element["NamaBarang"];
-              DataSementar.KodeBarang = element["KodeBarang"];
-              DataSementar.JumlahPeminjaman = element["JumlahPeminjaman"];
-              DataSementar.Jampeminjam = element["jamPeminjaman"];
-              DataSementar.TanggalPeminjman = element["tanggalPeminjaman"];
-              DataSementar.PercobaanPengembalian =
-                  element["PercobaanPengembalian"];
-              //kalao pengembalian user tidak ada maka (-) isinya
-              if (int.parse(element["PercobaanPengembalian"].toString()) == 0) {
-                DataSementar.jumlahPengembalian.add("-");
-                DataSementar.jamPengembalian.add("-");
-                DataSementar.tanggalPengembalian.add("-");
-              } else {
-                //ketika telah berisi
-                print(int.parse(element["PercobaanPengembalian"].toString()));
-                for (int i = 0;
-                    i < int.parse(element["PercobaanPengembalian"].toString());
-                    i++) {
-                  DataSementar.jumlahPengembalian
-                      .add(element["jumlahPengembalian"][i]);
+    await FirebaseFirestore.instance.collection("Report").get().then((value) =>
+        value.docs.forEach((element) {
+          DataPeminjam DataSementar = new DataPeminjam();
+          DataSementar.NamaPeminjam = element["NamaPeminjam"];
+          DataSementar.NoTelpon = element["NoTelpon"];
+          DataSementar.NamaBarang = element["NamaBarang"];
+          DataSementar.berM = element["berM"];
 
-                  DataSementar.jamPengembalian
-                      .add(element["jamPengembalian"][i]);
+          DataSementar.percobaanPeminjaman = element["percobaanPeminjaman"];
+          //ketika telah berisi
+          for (int i = 0;
+              i < (int.parse(element["percobaanPeminjaman"].toString()));
+              i++) {
+            DataSementar.KodeBarang.add(element["KodeBarang"][i]);
+            DataSementar.JumlahPeminjaman.add(element["JumlahPeminjaman"][i]);
+            DataSementar.Jampeminjam.add(element["jamPeminjaman"][i]);
+            DataSementar.TanggalPeminjman.add(element["tanggalPeminjaman"][i]);
+          }
 
-                  DataSementar.tanggalPengembalian
-                      .add(element["tanggalPengembalian"][i]);
-                }
-              }
+          DataSementar.PercobaanPengembalian = element["PercobaanPengembalian"];
+          //kalo pengembalian user tidak ada maka (-) isinya
+          if (int.parse(element["PercobaanPengembalian"].toString()) == 0) {
+            DataSementar.jumlahPengembalian.add("-");
+            DataSementar.jamPengembalian.add("-");
+            DataSementar.tanggalPengembalian.add("-");
+          } else {
+            //ketika telah berisi
+            for (int i = 0;
+                i < int.parse(element["PercobaanPengembalian"].toString());
+                i++) {
+              DataSementar.jumlahPengembalian
+                  .add(element["jumlahPengembalian"][i]);
 
-              dataPeminjam.add(DataSementar);
-            }));
+              DataSementar.jamPengembalian.add(element["jamPengembalian"][i]);
+
+              DataSementar.tanggalPengembalian
+                  .add(element["tanggalPengembalian"][i]);
+            }
+          }
+
+          dataPeminjam.add(DataSementar);
+        }));
   }
 
   bool isUpload = false;
@@ -144,6 +165,7 @@ class _RiwayatState extends State<Riwayat> {
                                     textAlign: TextAlign.center),
                               ),
                               Container(
+                                color: Colors.amber,
                                 width: 130,
                                 child: Text("Jumlah \nPeminjaman",
                                     style: GoogleFonts.beVietnamPro(
@@ -154,6 +176,7 @@ class _RiwayatState extends State<Riwayat> {
                                     textAlign: TextAlign.center),
                               ),
                               Container(
+                                color: Colors.amber,
                                 width: 130,
                                 child: Text("Kode \nBarang",
                                     style: GoogleFonts.beVietnamPro(
@@ -164,6 +187,7 @@ class _RiwayatState extends State<Riwayat> {
                                     textAlign: TextAlign.center),
                               ),
                               Container(
+                                color: Colors.amber,
                                 width: 130,
                                 child: Text("Jam \nPeminjaman",
                                     style: GoogleFonts.beVietnamPro(
@@ -174,6 +198,7 @@ class _RiwayatState extends State<Riwayat> {
                                     textAlign: TextAlign.center),
                               ),
                               Container(
+                                color: Colors.amber,
                                 width: 130,
                                 child: Text("Tanggal \nPeminjaman",
                                     style: GoogleFonts.beVietnamPro(
@@ -287,72 +312,138 @@ class _RiwayatState extends State<Riwayat> {
                                               ),
                                             ),
                                             Container(
-                                              width: 130,
-                                              height: 70,
-                                              child: Center(
-                                                child: Text(
-                                                    dataPeminjam[i]
-                                                        .JumlahPeminjaman,
-                                                    style: GoogleFonts
-                                                        .beVietnamPro(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 15,
-                                                      color: Colors.white,
+                                              width: 625,
+                                              color: Colors.brown,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  for (int j = 0;
+                                                      j <
+                                                          dataPeminjam[i]
+                                                              .Jampeminjam
+                                                              .length;
+                                                      j++)
+                                                    Column(
+                                                      children: [
+                                                        SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Column(
+                                                              children: [
+                                                                Container(
+                                                                  color: Colors
+                                                                      .amber,
+                                                                  width: 130,
+                                                                  child: Text( !dataPeminjam[i].berM ?
+                                                                      pemisahSpasi(dataPeminjam[i]
+                                                                              .JumlahPeminjaman[
+                                                                          j]) : pemisahSpasi(dataPeminjam[i]
+                                                                              .JumlahPeminjaman[
+                                                                          j]) + " M",
+                                                                      style: GoogleFonts
+                                                                          .beVietnamPro(
+                                                                        fontWeight:
+                                                                            FontWeight.bold,
+                                                                        fontSize:
+                                                                            15,
+                                                                        color: Colors
+                                                                            .white,
+                                                                      ),
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            Column(
+                                                              children: [
+                                                                Container(
+                                                                  color: Colors
+                                                                      .amber,
+                                                                  width: 130,
+                                                                  child: Text(
+                                                                      pemisahSpasi(dataPeminjam[i]
+                                                                              .KodeBarang[
+                                                                          j]),
+                                                                      style: GoogleFonts
+                                                                          .beVietnamPro(
+                                                                        fontWeight:
+                                                                            FontWeight.bold,
+                                                                        fontSize:
+                                                                            15,
+                                                                        color: Colors
+                                                                            .white,
+                                                                      ),
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            Column(
+                                                              children: [
+                                                                Container(
+                                                                  color: Colors
+                                                                      .amber,
+                                                                  width: 130,
+                                                                  child: Text(
+                                                                      pemisahSpasi(dataPeminjam[i]
+                                                                              .Jampeminjam[
+                                                                          j]),
+                                                                      style: GoogleFonts
+                                                                          .beVietnamPro(
+                                                                        fontWeight:
+                                                                            FontWeight.bold,
+                                                                        fontSize:
+                                                                            15,
+                                                                        color: Colors
+                                                                            .white,
+                                                                      ),
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            Column(
+                                                              children: [
+                                                                Container(
+                                                                  color: Colors
+                                                                      .amber,
+                                                                  width: 130,
+                                                                  child: Text(
+                                                                      pemisahSpasi(dataPeminjam[i]
+                                                                              .TanggalPeminjman[
+                                                                          j]),
+                                                                      style: GoogleFonts
+                                                                          .beVietnamPro(
+                                                                        fontWeight:
+                                                                            FontWeight.bold,
+                                                                        fontSize:
+                                                                            15,
+                                                                        color: Colors
+                                                                            .white,
+                                                                      ),
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                      ],
                                                     ),
-                                                    textAlign:
-                                                        TextAlign.center),
-                                              ),
-                                            ),
-                                            Container(
-                                              width: 130,
-                                              height: 70,
-                                              child: Center(
-                                                child: Text(
-                                                    dataPeminjam[i].KodeBarang,
-                                                    style: GoogleFonts
-                                                        .beVietnamPro(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 15,
-                                                      color: Colors.white,
-                                                    ),
-                                                    textAlign:
-                                                        TextAlign.center),
-                                              ),
-                                            ),
-                                            Container(
-                                              width: 130,
-                                              child: Center(
-                                                child: Text(
-                                                    dataPeminjam[i].Jampeminjam,
-                                                    style: GoogleFonts
-                                                        .beVietnamPro(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 15,
-                                                      color: Colors.white,
-                                                    ),
-                                                    textAlign:
-                                                        TextAlign.center),
-                                              ),
-                                            ),
-                                            Container(
-                                              width: 130,
-                                              color: Colors.amber,
-                                              child: Center(
-                                                child: Text(
-                                                    dataPeminjam[i]
-                                                        .TanggalPeminjman,
-                                                    style: GoogleFonts
-                                                        .beVietnamPro(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 15,
-                                                      color: Colors.white,
-                                                    ),
-                                                    textAlign:
-                                                        TextAlign.center),
+                                                ],
                                               ),
                                             ),
                                             Container(
@@ -382,10 +473,12 @@ class _RiwayatState extends State<Riwayat> {
                                                               children: [
                                                                 Container(
                                                                   width: 130,
-                                                                  child: Text(
-                                                                      dataPeminjam[i]
+                                                                  child: Text(!dataPeminjam[i].berM ?
+                                                                      pemisahSpasi(dataPeminjam[i]
                                                                               .jumlahPengembalian[
-                                                                          j],
+                                                                          j]) : pemisahSpasi(dataPeminjam[i]
+                                                                              .jumlahPengembalian[
+                                                                          j]) + " M",
                                                                       style: GoogleFonts
                                                                           .beVietnamPro(
                                                                         fontWeight:
@@ -406,9 +499,9 @@ class _RiwayatState extends State<Riwayat> {
                                                                 Container(
                                                                   width: 130,
                                                                   child: Text(
-                                                                      dataPeminjam[i]
+                                                                      pemisahSpasi(dataPeminjam[i]
                                                                               .jamPengembalian[
-                                                                          j],
+                                                                          j]),
                                                                       style: GoogleFonts
                                                                           .beVietnamPro(
                                                                         fontWeight:
@@ -429,9 +522,9 @@ class _RiwayatState extends State<Riwayat> {
                                                                 Container(
                                                                   width: 130,
                                                                   child: Text(
-                                                                      dataPeminjam[i]
+                                                                      pemisahSpasi(dataPeminjam[i]
                                                                               .tanggalPengembalian[
-                                                                          j],
+                                                                          j]),
                                                                       style: GoogleFonts
                                                                           .beVietnamPro(
                                                                         fontWeight:
