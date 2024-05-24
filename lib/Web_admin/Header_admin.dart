@@ -3,6 +3,7 @@
 import 'package:aplikasi_peminjaman/Web_admin/konten/Barang.dart';
 import 'package:aplikasi_peminjaman/Web_admin/konten/Riwayat.dart';
 import 'package:aplikasi_peminjaman/Web_admin/konten/tambah_barang.dart';
+import 'package:aplikasi_peminjaman/web_user/Header_user.dart';
 import 'package:aplikasi_peminjaman/web_user/Konten/Home_Web.dart';
 
 import 'package:aplikasi_peminjaman/web_user/Konten/Pengembalian%20Web.dart';
@@ -83,6 +84,9 @@ class _HeaderState extends State<Header_admin> {
                         )
                       ],
                     ),
+                  ),
+                  SizedBox(
+                    width: 87,
                   ),
                   Container(
                     child: Row(
@@ -250,9 +254,36 @@ class _HeaderState extends State<Header_admin> {
                             ),
                           ),
                         ),
+                        SizedBox(
+                          width: 100,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Header_user()));
+                          },
+                          child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Color.fromARGB(255, 250, 208, 7),
+                              ),
+                              width: 95,
+                              height: 30,
+                              child: Center(
+                                child: Text(
+                                  "Logout",
+                                  style: GoogleFonts.beVietnamPro(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15),
+                                ),
+                              )),
+                        ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

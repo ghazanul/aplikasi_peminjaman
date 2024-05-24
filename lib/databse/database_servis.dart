@@ -572,7 +572,7 @@ class DatabaseServie {
               isKetemu = true;
             }
           } else {
-            print("XXXXXXXXXXXXXXn : " +
+            print("bnnnnb : " +
                 (jumlahYangDiKembalikan.toString() +
                             " " +
                             element["PercobaanPengembalian"].toString() ==
