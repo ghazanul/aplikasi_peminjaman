@@ -649,6 +649,7 @@ class DatabaseServie {
     ///cari tau download data di firebase
     ///cari tau download data di firebase
     ///cari tau download data di firebase
+    ///buat supaya ketika di upload icon gambar barang uang, gambar sebelumnnya ke replace
   }
 
   //============================================================================================================

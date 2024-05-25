@@ -965,7 +965,7 @@ class _Pengembalian_webState extends State<Pengembalian_web> {
                                                                           //Data Peminjam
 
                                                                           Text(
-                                                                            "Peminjaman Ti",
+                                                                            "Pengembalian TI",
                                                                             style: GoogleFonts.beVietnamPro(
                                                                                 fontSize: 15,
                                                                                 fontWeight: FontWeight.bold,

@@ -606,6 +606,7 @@ class _Peminjaman_WebState extends State<Peminjaman_Web> {
                                                                                                                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                                                                                         children: [
                                                                                                                                           Container(
+                                                                                                                                            color: Colors.amber,
                                                                                                                                             width: 200,
                                                                                                                                             child: Row(
                                                                                                                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
