@@ -606,7 +606,6 @@ class _Peminjaman_WebState extends State<Peminjaman_Web> {
                                                                                                                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                                                                                         children: [
                                                                                                                                           Container(
-                                                                                                                                            color: Colors.amber,
                                                                                                                                             width: 200,
                                                                                                                                             child: Row(
                                                                                                                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1536,7 +1535,7 @@ class _Peminjaman_WebState extends State<Peminjaman_Web> {
                                                   children: [
                                                     //Data Peminjam
                                                     Text(
-                                                      "Peminjaman Ti",
+                                                      "Peminjaman TI",
                                                       style: GoogleFonts
                                                           .beVietnamPro(
                                                               fontSize: 15,

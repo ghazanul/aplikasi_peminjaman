@@ -5,6 +5,7 @@ import 'dart:html';
 import 'package:aplikasi_peminjaman/databse/database_servis.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -99,6 +100,7 @@ class _Home_WebState extends State<Barang_User> {
             int.parse(element['JumlahTotalBarang'].toString()));
       });
     });
+    
   }
 
   getBarangBerkode(int id) async {
@@ -211,7 +213,12 @@ class _Home_WebState extends State<Barang_User> {
                                                     Container(
                                                       width: 130,
                                                       height: 135,
-                                                      
+                                                      decoration: BoxDecoration(
+                                                          color: Color.fromARGB(100, 71, 71, 75),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      20)),
                                                       child: Column(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
