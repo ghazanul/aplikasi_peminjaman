@@ -3,7 +3,7 @@
 import 'package:aplikasi_peminjaman/Mobile_user/Header_user_mobile.dart';
 import 'package:aplikasi_peminjaman/Web_admin/Authentication.dart';
 import 'package:aplikasi_peminjaman/Web_admin/Header_admin.dart';
-import 'package:aplikasi_peminjaman/databse/PengecekDeviceUser.dart';
+import 'package:aplikasi_peminjaman/databse/CekDeviceUser.dart';
 import 'package:aplikasi_peminjaman/web_user/Header_user.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';

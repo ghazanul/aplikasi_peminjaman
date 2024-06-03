@@ -502,7 +502,17 @@ class _Home_WebState extends State<Barang> {
                                                       child: Container(
                                                         width: 130,
                                                         height: 135,
-                                                        
+                                                        decoration: BoxDecoration(
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    100,
+                                                                    71,
+                                                                    71,
+                                                                    75),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20)),
                                                         child: Column(
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
@@ -525,7 +535,6 @@ class _Home_WebState extends State<Barang> {
                                                               height: 70,
                                                               width: 90,
                                                             ),
-                                                            
                                                             Text(
                                                               KumpulanNama[i],
                                                               style: GoogleFonts
@@ -666,7 +675,7 @@ class _Home_WebState extends State<Barang> {
                                                                             ),
                                                                             Container(
                                                                               decoration: BoxDecoration(
-                                                                                borderRadius: BorderRadius.circular(10),
+                                                                                borderRadius: BorderRadius.circular(5),
                                                                                 color: Colors.white,
                                                                               ),
                                                                               height: 63,
@@ -675,7 +684,14 @@ class _Home_WebState extends State<Barang> {
                                                                                 padding: const EdgeInsets.all(8.0),
                                                                                 child: TextField(
                                                                                   controller: JumlahyangDiHapus,
-                                                                                  decoration: InputDecoration(border: InputBorder.none),
+                                                                                  decoration: InputDecoration(
+                                                                                    border: InputBorder.none,
+                                                                                    hintText: "Masukkan Jumlah Yang Ingin Di hapus",
+                                                                                    hintStyle: TextStyle(
+                                                                                      fontWeight: FontWeight.w100,
+                                                                                    ),
+                                                                                  ),
+                                                                                  // InputDecoration(border: InputBorder.none),
                                                                                 ),
                                                                               ),
                                                                             ),
@@ -692,11 +708,11 @@ class _Home_WebState extends State<Barang> {
                                                                               },
                                                                               child: Container(
                                                                                 decoration: BoxDecoration(
-                                                                                  borderRadius: BorderRadius.circular(5),
+                                                                                  borderRadius: BorderRadius.circular(10),
                                                                                   color: Color.fromARGB(255, 250, 208, 7),
                                                                                 ),
-                                                                                height: 51,
-                                                                                width: 212,
+                                                                                height: 52,
+                                                                                width: 200,
                                                                                 child: Center(
                                                                                   child: Text(
                                                                                     "HAPUS",
@@ -718,8 +734,17 @@ class _Home_WebState extends State<Barang> {
                                                       child: Container(
                                                         width: 130,
                                                         height: 135,
-                                                        
-                                                      
+                                                        decoration: BoxDecoration(
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    100,
+                                                                    71,
+                                                                    71,
+                                                                    75),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20)),
                                                         child: Column(
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
@@ -742,7 +767,6 @@ class _Home_WebState extends State<Barang> {
                                                               height: 70,
                                                               width: 90,
                                                             ),
-                                                            
                                                             Text(
                                                               KumpulanNama[i],
                                                               style: GoogleFonts

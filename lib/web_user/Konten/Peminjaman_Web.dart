@@ -696,7 +696,7 @@ class _Peminjaman_WebState extends State<Peminjaman_Web> {
                                                                                                         Container(
                                                                                                       width: 130,
                                                                                                       height: 135,
-                                                                                                      color: Colors.amber,
+                                                                                                      decoration: BoxDecoration(color: Color.fromARGB(100, 71, 71, 75), borderRadius: BorderRadius.circular(20)),
                                                                                                       child: Column(
                                                                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                                                                         children: [
@@ -904,7 +904,7 @@ class _Peminjaman_WebState extends State<Peminjaman_Web> {
                                                                                                         Container(
                                                                                                       width: 130,
                                                                                                       height: 135,
-                                                                                                      color: Colors.amber,
+                                                                                                      decoration: BoxDecoration(color: Color.fromARGB(100, 71, 71, 75), borderRadius: BorderRadius.circular(20)),
                                                                                                       child: Column(
                                                                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                                                                         children: [
@@ -1107,7 +1107,7 @@ class _Peminjaman_WebState extends State<Peminjaman_Web> {
                                                                                                                             width: 251,
                                                                                                                             height: 51,
                                                                                                                             child: Center(
-                                                                                                                              child: Text(" Jumlah Barang Saat Ini = " + (KumpilanTotalJumlahBarang[i] - KumpulanBarangTerpakai[i]).toString(), style: GoogleFonts.beVietnamPro(fontSize: 15, color: Colors.white, fontWeight: FontWeight.normal)),
+                                                                                                                              child: Text("Jumlah Barang Saat Ini = " + (KumpilanTotalJumlahBarang[i] - KumpulanBarangTerpakai[i]).toString(), style: GoogleFonts.beVietnamPro(fontSize: 15, color: Colors.white, fontWeight: FontWeight.normal)),
                                                                                                                             ),
                                                                                                                           ),
                                                                                                                           SizedBox(
@@ -1214,7 +1214,7 @@ class _Peminjaman_WebState extends State<Peminjaman_Web> {
                                                                                                         Container(
                                                                                                       width: 130,
                                                                                                       height: 135,
-                                                                                                      color: Colors.amber,
+                                                                                                      decoration: BoxDecoration(color: Color.fromARGB(100, 71, 71, 75), borderRadius: BorderRadius.circular(20)),
                                                                                                       child: Column(
                                                                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                                                                         children: [
@@ -1324,7 +1324,7 @@ class _Peminjaman_WebState extends State<Peminjaman_Web> {
                                                                                                                                 controller: JumlahyangDipinjamController,
                                                                                                                                 decoration: InputDecoration(
                                                                                                                                   border: InputBorder.none,
-                                                                                                                                  hintText: " Masukkan Jumlah Yang Dipinjaman",
+                                                                                                                                  hintText: "Masukkan Jumlah Yang Dipinjaman",
                                                                                                                                   hintStyle: TextStyle(
                                                                                                                                     fontWeight: FontWeight.w100,
                                                                                                                                   ),
@@ -1413,13 +1413,12 @@ class _Peminjaman_WebState extends State<Peminjaman_Web> {
                                                                                                               ],
                                                                                                             );
                                                                                                           });
-                                                                                                    },
-                                                                                                    child:
-                                                                                                        //icon barang tidak berkode
-                                                                                                        Container(
+                                                                                                    }, //icon barang tidak berkode
+
+                                                                                                    child: Container(
                                                                                                       width: 130,
                                                                                                       height: 135,
-                                                                                                      color: Colors.amber,
+                                                                                                      decoration: BoxDecoration(color: Color.fromARGB(100, 71, 71, 75), borderRadius: BorderRadius.circular(20)),
                                                                                                       child: Column(
                                                                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                                                                         children: [

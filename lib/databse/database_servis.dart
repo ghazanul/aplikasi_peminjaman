@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_interpolation_to_compose_strings
+// ignore_for_file: prefer_interpolation_to_compose_strings, curly_braces_in_flow_control_structures
 
 import 'dart:html';
 import 'dart:io';
@@ -60,7 +60,7 @@ class DatabaseServie {
     await barangCollection.get().then((QuerySnapshot snapshot) {
       snapshot.docs.forEach((element) {
         if (int.parse(element['Id'].toString()) >= id) {
-          id = int.parse(element['Id'].toString()) + 1;
+          id = int.parse(element['Id'].toString()) + 1; //+ 1 untuk memisahkan tiap data yang masuk 
         }
       });
     });
@@ -180,6 +180,7 @@ class DatabaseServie {
       "SatuanMeter": SatuanMeter,
       "SekaliPakai": sekaliPakai,
     });
+    print("edit berhasil");
   }
 
   //========================================DataBase Mahasiswa
@@ -650,6 +651,11 @@ class DatabaseServie {
     ///cari tau download data di firebase
     ///cari tau download data di firebase
     ///buat supaya ketika di upload icon gambar barang uang, gambar sebelumnnya ke replace
+    ///bug ketika upload gambar di tambah kategori admin dengan nama yang sama maka gambar sebelumnnya akan ke ubah dengan gambar baru
+    ///
+    ///
+    /// bug ketika update tidak ada masuk data ke kumpulanNamafile di database
+    ///
   }
 
   //============================================================================================================

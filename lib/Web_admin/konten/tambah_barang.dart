@@ -29,24 +29,86 @@ class _tambah_barangState extends State<tambah_barang> {
   String? EditurlImage;
   UploadTask? uploadTask;
   Reference? ref;
+  bool ditemukanDuplikat = false;
+  bool uploadRealFileName = false;
 
+  //hapus nama file pada database firestore
+  hapusNamaFileFirestore(String namaBarang) async {
+    print("hapus barang in firestore");
+    String idNamaFileYangDihapus = "";
+    //mencari data yang ingin dihapus
+    await FirebaseFirestore.instance
+        .collection("kumpulanNamaFile")
+        .get()
+        .then((value) => value.docs.forEach((element) {
+              if (element["namaBarang"] == namaBarang) {
+                idNamaFileYangDihapus = element.id.toString();
+              }
+            }));
 
-  UploadGambar() async {
-    try {
-      ref = FirebaseStorage.instance
-          .ref()
-          .child('gambar')
-          .child('/' + filePilihan!.files.first.name);
+    //menghapus data
+    await FirebaseFirestore.instance
+        .collection("kumpulanNamaFile")
+        .doc(idNamaFileYangDihapus.toString())
+        .delete();
+  }
 
-      final metadata = SettableMetadata(contentType: 'image/jpeg');
+  //upload nama file ke database firestore
+  cekNamaFileFirestore() async {
+    await FirebaseFirestore.instance
+        .collection("kumpulanNamaFile")
+        .get()
+        .then((value) => value.docs.forEach((element) {
+              if (filePilihan!.files.first.name.toString() ==
+                  element.id.toString()) {
+                ditemukanDuplikat = true;
+              }
+            }));
+  }
 
-      uploadTask = ref!.putData(filePilihan!.files.first.bytes!, metadata);
+  uploadNamaFileFirestore(String namaBarang) async {
+    if (!ditemukanDuplikat) {
+      print("upload data to firestore");
+      await FirebaseFirestore.instance
+          .collection("kumpulanNamaFile")
+          .doc(filePilihan!.files.first.name)
+          .set({
+        "namaFileGambar": filePilihan!.files.first.name,
+        "namaBarang": namaBarang
+      });
+    }
+  }
 
-      await uploadTask!.whenComplete(() => null);
+  UploadGambar(String namaBarang) async {
+    //cek nama di firestore
+    await cekNamaFileFirestore();
+    print("DitemukanDuplikat : " + ditemukanDuplikat.toString());
+    //cek data lagak that
+    if (!ditemukanDuplikat) {
+      try {
+        //upload ke firebase storage
+        ref = FirebaseStorage.instance
+            .ref()
+            .child('gambar')
+            .child('/' + filePilihan!.files.first.name);
 
-      setState(() {});
-    } catch (e) {
-      print(e);
+        final metadata = SettableMetadata(contentType: 'image/jpeg');
+
+        uploadTask = ref!.putData(filePilihan!.files.first.bytes!, metadata);
+
+        await uploadTask!.whenComplete(() => null);
+        Navigator.pop(context);
+        refreshData();
+        setState(() {});
+      } catch (e) {
+        print(e);
+      }
+    } else {
+      Navigator.pop(context);
+      setState(() {
+        refreshData();
+      });
+      popUpNamaFileSama(context);
     }
   }
 
@@ -60,6 +122,83 @@ class _tambah_barangState extends State<tambah_barang> {
               color: Colors.white,
             ),
           );
+        });
+  }
+
+  popUpNamaFileSama(BuildContext context) {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Center(
+              child: Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                color: Color.fromARGB(255, 39, 39, 41),
+                border: Border.all(
+                    width: 4, color: Color.fromARGB(255, 71, 71, 75))),
+            width: 375,
+            height: 251,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 44),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  //icon
+
+                  Text(
+                    "Upload Gambar Gagal !",
+                    style: GoogleFonts.beVietnamPro(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: 26,
+                  ),
+                  Text(
+                    "Nama File Gambar Sudah Ada\n Ubah Nama File Gambar Agar bisa Upload Gambar",
+                    style: GoogleFonts.beVietnamPro(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: 26,
+                  ),
+
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        ditemukanDuplikat = false;
+                        Navigator.pop(context);
+                        print("xxxxxxxx");
+                      });
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Color.fromARGB(255, 250, 208, 7),
+                      ),
+                      height: 44,
+                      width: 126,
+                      child: Center(
+                        child: Text(
+                          "KEMBALI",
+                          style: GoogleFonts.beVietnamPro(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 7, 7, 10)),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ));
         });
   }
 
@@ -113,7 +252,6 @@ class _tambah_barangState extends State<tambah_barang> {
 
   getBarang() async {
     setState(() {});
-    print("getbarang");
     await FirebaseFirestore.instance
         .collection("Barang")
         .orderBy(
@@ -124,7 +262,6 @@ class _tambah_barangState extends State<tambah_barang> {
         .then((QuerySnapshot snapshot) {
       snapshot.docs.forEach((element) {
         KumpulanNama.add(element['Nama']);
-
         KumpulanKode.add(element['Berkode']);
         KumpulanUrlImage.add(element['Gambar']);
         KumpilanId.add(int.parse(element.id.toString()));
@@ -135,6 +272,9 @@ class _tambah_barangState extends State<tambah_barang> {
         KumpulanSatuanMeter.add(element["SatuanMeter"]);
       });
     });
+    print("getbarang");
+    print(KumpilanId.length);
+
   }
 
   getEditBarang(int id) async {
@@ -145,7 +285,6 @@ class _tambah_barangState extends State<tambah_barang> {
         .doc(id.toString())
         .get()
         .then((value) {
-      EditisUpload = value["Berkode"];
       EditurlImage = value["Gambar"];
       EditNamaBarang.text = value["Nama"];
       SatuanMeter = value["SatuanMeter"];
@@ -160,26 +299,30 @@ class _tambah_barangState extends State<tambah_barang> {
         }
       }
     });
+    print("getbarang EDIT");
   }
 
   UbahBarang(String NamaBarang, String Gambar, bool Berkode, int id,
       bool SatuanMeter, bool sekaliPakai) async {
     DatabaseServie()
         .EditBarang(NamaBarang, Gambar, Berkode, id, SatuanMeter, sekaliPakai);
-    setState(() {});
+    refreshData();
+    setState(() {
+      
+    });
   }
 
   bool isUpload = false;
   Uint8List? imageBytes;
   Image? imageUploaded;
-  String _dropdownValue = "Tipe ";
+  String _dropdownValue = "Tipe";
 
   bool SatuanMeter = false;
 
-  bool EditisUpload = false;
+  bool EditisUpload = true;
   Uint8List? EditimageBytes;
   Image? EditimageUploaded;
-  String _EditdropdownValue = "Tipe ";
+  String _EditdropdownValue = "Tipe";
   bool EditSatuanMeter = false;
   bool EditSekaliPakai = false;
 
@@ -381,6 +524,7 @@ class _tambah_barangState extends State<tambah_barang> {
                                                                                                           onTap: () async {
                                                                                                             Navigator.pop(context);
                                                                                                             Navigator.pop(context);
+                                                                                                            await hapusNamaFileFirestore(KumpulanNama[i]);
                                                                                                             await DatabaseServie().HapusBarang(KumpilanId[i]);
                                                                                                             refreshData();
                                                                                                             setState(() {});
@@ -503,10 +647,15 @@ class _tambah_barangState extends State<tambah_barang> {
                                                                                                         filePilihan = x;
                                                                                                         //upload to database
                                                                                                         loadingPanel(context);
-                                                                                                        await UploadGambar();
-                                                                                                        Navigator.pop(context);
-                                                                                                        EditurlImage = await ref!.getDownloadURL();
-                                                                                                        EditisUpload = true;
+                                                                                                        await UploadGambar(Namabarang.text);
+                                                                                                        if (!ditemukanDuplikat) {
+                                                                                                          EditurlImage = await ref!.getDownloadURL();
+                                                                                                          EditisUpload = true;
+                                                                                                        } else {
+                                                                                                          EditurlImage = "";
+                                                                                                          EditisUpload = false;
+                                                                                                        }
+
                                                                                                         setState(() {});
                                                                                                       });
                                                                                                     }
@@ -673,24 +822,104 @@ class _tambah_barangState extends State<tambah_barang> {
                                                                                                       berkode = false;
                                                                                                       EditSekaliPakai = true;
                                                                                                     }
+
                                                                                                     //proses penambahan
-                                                                                                    await UbahBarang(EditNamaBarang.text.toString(), EditurlImage!, berkode, KumpilanId[i], SatuanMeter, EditSekaliPakai);
-                                                                                                    //untuk tutup pop up
-                                                                                                    Navigator.pop(context);
-                                                                                                    Navigator.pop(context);
-                                                                                                    //untuk mengambalikan data jadi normal
-                                                                                                    isUpload = false;
-                                                                                                    _EditdropdownValue = 'Tipe';
-                                                                                                    EditNamaBarang.text = '';
-                                                                                                    EditurlImage = '';
-                                                                                                    EditSatuanMeter = false;
-                                                                                                    //untuk mengriset semua seperti semua
+                                                                                                    if (EditNamaBarang.text != "" && EditurlImage != "") {
+                                                                                                      await UbahBarang(EditNamaBarang.text.toString(), EditurlImage!.toString(), berkode, KumpilanId[i], SatuanMeter, EditSekaliPakai);
+                                                                                                      //untuk tutup pop up
+                                                                                                      Navigator.pop(context);
+                                                                                                      Navigator.pop(context);
+                                                                                                      //untuk mengambalikan data jadi normal
+                                                                                                      isUpload = false;
+                                                                                                      _EditdropdownValue = 'Tipe';
+                                                                                                      EditNamaBarang.text = '';
+                                                                                                      EditurlImage = '';
+                                                                                                      EditSatuanMeter = false;
+                                                                                                      setState((){
+                                                                                                      });
+                                                                                                    } else {
+                                                                                                      showDialog(
+                                                                                                          barrierColor: Color.fromARGB(141, 7, 7, 7),
+                                                                                                          context: context,
+                                                                                                          builder: (BuildContext context) {
+                                                                                                            return SimpleDialog(
+                                                                                                              insetPadding: EdgeInsets.only(top: 80),
+                                                                                                              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+                                                                                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                                                                                                              backgroundColor: Color.fromARGB(0, 39, 39, 41),
+                                                                                                              children: [
+                                                                                                                Center(
+                                                                                                                  child: Container(
+                                                                                                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(25), color: Color.fromARGB(255, 39, 39, 41), border: Border.all(width: 4, color: Color.fromARGB(255, 71, 71, 75))),
+                                                                                                                    width: 375,
+                                                                                                                    height: 251,
+                                                                                                                    child: Padding(
+                                                                                                                      padding: const EdgeInsets.symmetric(
+                                                                                                                        vertical: 60,
+                                                                                                                      ),
+                                                                                                                      child: Column(
+                                                                                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                                                                                        children: [
+                                                                                                                          //icon
 
-                                                                                                    refreshData();
+                                                                                                                          Text(
+                                                                                                                            "Penambahan Gagal \nIsi Semua Terlebih Dahulu!",
+                                                                                                                            style: GoogleFonts.beVietnamPro(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                                                                            textAlign: TextAlign.center,
+                                                                                                                          ),
 
-                                                                                                    setState(
-                                                                                                      () {},
-                                                                                                    );
+                                                                                                                          SizedBox(
+                                                                                                                            height: 35,
+                                                                                                                          ),
+                                                                                                                          Column(
+                                                                                                                            children: [
+                                                                                                                              GestureDetector(
+                                                                                                                                onTap: () async {
+                                                                                                                                  //untuk membalikannya seperti semula
+                                                                                                                                  DataBarang.text = '';
+                                                                                                                                  Navigator.pop(context);
+                                                                                                                                  refreshData();
+                                                                                                                                  setState(() {});
+                                                                                                                                },
+                                                                                                                                child: Row(
+                                                                                                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                                                                                                  children: [
+                                                                                                                                    GestureDetector(
+                                                                                                                                      onTap: () {
+                                                                                                                                        Navigator.pop(context); //untuk kembali ke layer sebelumnya
+                                                                                                                                      },
+                                                                                                                                      child: Container(
+                                                                                                                                        decoration: BoxDecoration(
+                                                                                                                                          borderRadius: BorderRadius.circular(10),
+                                                                                                                                          color: Color.fromARGB(255, 250, 208, 7),
+                                                                                                                                        ),
+                                                                                                                                        height: 44,
+                                                                                                                                        width: 126,
+                                                                                                                                        child: Center(
+                                                                                                                                          child: Text(
+                                                                                                                                            "KEMBALI",
+                                                                                                                                            style: GoogleFonts.beVietnamPro(fontSize: 15, fontWeight: FontWeight.bold, color: const Color.fromARGB(255, 7, 7, 10)),
+                                                                                                                                          ),
+                                                                                                                                        ),
+                                                                                                                                      ),
+                                                                                                                                    ),
+                                                                                                                                    SizedBox(
+                                                                                                                                      width: 10,
+                                                                                                                                    ),
+                                                                                                                                  ],
+                                                                                                                                ),
+                                                                                                                              ),
+                                                                                                                            ],
+                                                                                                                          ),
+                                                                                                                        ],
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                  ),
+                                                                                                                )
+                                                                                                              ],
+                                                                                                            );
+                                                                                                          });
+                                                                                                    }
                                                                                                   },
                                                                                                   child: Container(
                                                                                                     decoration: BoxDecoration(
@@ -803,11 +1032,9 @@ class _tambah_barangState extends State<tambah_barang> {
                                                                             51,
                                                                         child:
                                                                             Center(
-                                                                          child:!KumpulanKode[i] && KumpulanSatuanMeter[i]? Text(
-                                                                              " Panjang Barang Tersisa = " + KumpilanTotalJumlahBarang[i].toString() + " M",  
-                                                                              style: GoogleFonts.beVietnamPro(fontSize: 15, color: Colors.white, fontWeight: FontWeight.normal)) : Text(
-                                                                              " Jumlah Barang Saat Ini = " + KumpilanTotalJumlahBarang[i].toString(),  
-                                                                              style: GoogleFonts.beVietnamPro(fontSize: 15, color: Colors.white, fontWeight: FontWeight.normal)),
+                                                                          child: !KumpulanKode[i] && KumpulanSatuanMeter[i]
+                                                                              ? Text(" Panjang Barang Tersisa = " + KumpilanTotalJumlahBarang[i].toString() + " M", style: GoogleFonts.beVietnamPro(fontSize: 15, color: Colors.white, fontWeight: FontWeight.normal))
+                                                                              : Text(" Jumlah Barang Saat Ini = " + KumpilanTotalJumlahBarang[i].toString(), style: GoogleFonts.beVietnamPro(fontSize: 15, color: Colors.white, fontWeight: FontWeight.normal)),
                                                                         ),
                                                                       ),
                                                                       SizedBox(
@@ -997,6 +1224,7 @@ class _tambah_barangState extends State<tambah_barang> {
                           SizedBox(height: 27),
                           GestureDetector(
                             onTap: () {
+                              //pop up normal
                               showDialog(
                                   barrierColor: Color.fromARGB(141, 7, 7, 7),
                                   context: context,
@@ -1087,12 +1315,17 @@ class _tambah_barangState extends State<tambah_barang> {
                                                             //upload to database
                                                             loadingPanel(
                                                                 context);
-                                                            await UploadGambar();
-                                                            Navigator.pop(
-                                                                context);
-                                                            urlImage = await ref!
-                                                                .getDownloadURL();
-                                                            isUpload = true;
+                                                            await UploadGambar(
+                                                                Namabarang
+                                                                    .text);
+                                                            if (!ditemukanDuplikat) {
+                                                              urlImage = await ref!
+                                                                  .getDownloadURL();
+                                                              isUpload = true;
+                                                            } else {
+                                                              urlImage = "";
+                                                              isUpload = false;
+                                                            }
                                                             setState(() {});
                                                           });
                                                         }
@@ -1322,13 +1555,15 @@ class _tambah_barangState extends State<tambah_barang> {
                                                       height: 16,
                                                     ),
                                                     GestureDetector(
-                                                      onTap: () {
+                                                      onTap: () async {
                                                         //proses penambahan
                                                         if (_dropdownValue !=
                                                                 'Tipe' &&
                                                             Namabarang.text !=
                                                                 '' &&
                                                             urlImage != '') {
+                                                          uploadNamaFileFirestore(
+                                                              Namabarang.text);
                                                           addBarang(
                                                               Namabarang.text
                                                                   .toString(),

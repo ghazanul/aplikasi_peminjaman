@@ -1145,7 +1145,7 @@ class _Pengembalian_webState extends State<Pengembalian_web> {
                                                                                           await FirebaseFirestore.instance.collection("Barang").doc(docBarangYangDipinjamSekarang).update({
                                                                                             "JumlahTerpakai": nilaiJumlahTerpakaiSekarang - 1
                                                                                           });
-                                                                                          print("Mengurangi barang terpakai berhasil");   
+                                                                                          print("Mengurangi barang terpakai berhasil");
                                                                                         } else {
                                                                                           //proses mengatur jumlah terpakai agar berkurang untyuk barang tidak berkode
                                                                                           int nilaiJumlahTerpakaiSekarang = 0;
@@ -1186,7 +1186,7 @@ class _Pengembalian_webState extends State<Pengembalian_web> {
 
                                                                                         print(peminjamanGagalKarenaJumlahYangDiKembalikanKebanyakan);
 
-                                                                                        if (peminjamanGagalKarenaJumlahYangDiKembalikanKebanyakan  == false) {
+                                                                                        if (peminjamanGagalKarenaJumlahYangDiKembalikanKebanyakan == false) {
                                                                                           //penghapusan data di database user
                                                                                           await FirebaseFirestore.instance.collection("User").doc(DocPeminjamSekarang).collection("BarangBarang").doc(idBarangYangDikembalikan).delete();
                                                                                           print("hapus data barang berhasil");
@@ -1204,19 +1204,15 @@ class _Pengembalian_webState extends State<Pengembalian_web> {
                                                                                             });
                                                                                             print("Mengubah status barang berhasil");
                                                                                           }
-
-                                                                                          
                                                                                         }
 
-                                                                                        if ( !munculPopUpPengembalianKebanyakan) {
+                                                                                        if (!munculPopUpPengembalianKebanyakan) {
                                                                                           //REPORT
                                                                                           print("JUmlah barang yang di kembalikan : " + KodeAtauJumlahYangDikembalikan[0].toString());
-                                                                                          if(isBarangBerkodeYangAkanDikembalikan){
-
-                                                                                          await DatabaseServie().ReportPengembalian(NamaPeminjamSekarang, BarangYangDikembalikan[0], KodeAtauJumlahYangDikembalikan[0].toString());
-                                                                                          }else{
-
-                                                                                          await DatabaseServie().ReportPengembalian(NamaPeminjamSekarang, BarangYangDikembalikan[0], KodeAtauJumlahYangDikembalikan[0].toString());
+                                                                                          if (isBarangBerkodeYangAkanDikembalikan) {
+                                                                                            await DatabaseServie().ReportPengembalian(NamaPeminjamSekarang, BarangYangDikembalikan[0], KodeAtauJumlahYangDikembalikan[0].toString());
+                                                                                          } else {
+                                                                                            await DatabaseServie().ReportPengembalian(NamaPeminjamSekarang, BarangYangDikembalikan[0], KodeAtauJumlahYangDikembalikan[0].toString());
                                                                                           }
                                                                                           print("Report berhasil didata");
                                                                                         }
@@ -1555,11 +1551,11 @@ class _Pengembalian_webState extends State<Pengembalian_web> {
                                                                                                         },
                                                                                                         child:
 
-                                                                                                            /// icon barang berkode
+                                                                                                            //icon barang berkode
                                                                                                             Container(
                                                                                                           width: 130,
                                                                                                           height: 135,
-                                                                                                          color: Colors.amber,
+                                                                                                          decoration: BoxDecoration(color: Color.fromARGB(100, 71, 71, 75), borderRadius: BorderRadius.circular(20)),
                                                                                                           child: Column(
                                                                                                             mainAxisAlignment: MainAxisAlignment.center,
                                                                                                             children: [
@@ -1581,7 +1577,7 @@ class _Pengembalian_webState extends State<Pengembalian_web> {
                                                                                                         ),
                                                                                                       )
                                                                                                     ] else ...[
-                                                                                                      //pinjam Barang Tidak berkode
+                                                                                                      //pinjam Barang Tidak berkode 
                                                                                                       GestureDetector(
                                                                                                         onTap: () {
                                                                                                           showDialog(
@@ -1714,7 +1710,7 @@ class _Pengembalian_webState extends State<Pengembalian_web> {
                                                                                                             Container(
                                                                                                           width: 130,
                                                                                                           height: 135,
-                                                                                                          color: Colors.amber,
+                                                                                                          decoration: BoxDecoration(color: Color.fromARGB(100, 71, 71, 75), borderRadius: BorderRadius.circular(20)),
                                                                                                           child: Column(
                                                                                                             mainAxisAlignment: MainAxisAlignment.center,
                                                                                                             children: [

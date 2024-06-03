@@ -164,7 +164,6 @@ class _RiwayatState extends State<Riwayat> {
                                     textAlign: TextAlign.center),
                               ),
                               Container(
-                                color: Colors.amber,
                                 width: 130,
                                 child: Text("Jumlah \nPeminjaman",
                                     style: GoogleFonts.beVietnamPro(
@@ -175,7 +174,6 @@ class _RiwayatState extends State<Riwayat> {
                                     textAlign: TextAlign.center),
                               ),
                               Container(
-                                color: Colors.amber,
                                 width: 130,
                                 child: Text("Kode \nBarang",
                                     style: GoogleFonts.beVietnamPro(
@@ -186,7 +184,6 @@ class _RiwayatState extends State<Riwayat> {
                                     textAlign: TextAlign.center),
                               ),
                               Container(
-                                color: Colors.amber,
                                 width: 130,
                                 child: Text("Jam \nPeminjaman",
                                     style: GoogleFonts.beVietnamPro(
@@ -197,7 +194,6 @@ class _RiwayatState extends State<Riwayat> {
                                     textAlign: TextAlign.center),
                               ),
                               Container(
-                                color: Colors.amber,
                                 width: 130,
                                 child: Text("Tanggal \nPeminjaman",
                                     style: GoogleFonts.beVietnamPro(
@@ -257,7 +253,6 @@ class _RiwayatState extends State<Riwayat> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Container(
-                                              color: Colors.amber,
                                               width: 130,
                                               height: 70,
                                               child: Center(
@@ -293,7 +288,6 @@ class _RiwayatState extends State<Riwayat> {
                                               ),
                                             ),
                                             Container(
-                                              color: Colors.amber,
                                               width: 130,
                                               height: 70,
                                               child: Center(
@@ -312,7 +306,6 @@ class _RiwayatState extends State<Riwayat> {
                                             ),
                                             Container(
                                               width: 625,
-                                              color: Colors.brown,
                                               child: Column(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
@@ -336,8 +329,7 @@ class _RiwayatState extends State<Riwayat> {
                                                             Column(
                                                               children: [
                                                                 Container(
-                                                                  color: Colors
-                                                                      .amber,
+                                                                  
                                                                   width: 130,
                                                                   child: Text( !dataPeminjam[i].berM ?
                                                                       pemisahSpasi(dataPeminjam[i]
@@ -363,8 +355,7 @@ class _RiwayatState extends State<Riwayat> {
                                                             Column(
                                                               children: [
                                                                 Container(
-                                                                  color: Colors
-                                                                      .amber,
+                                                                  
                                                                   width: 130,
                                                                   child: Text(
                                                                       pemisahSpasi(dataPeminjam[i]
@@ -388,8 +379,7 @@ class _RiwayatState extends State<Riwayat> {
                                                             Column(
                                                               children: [
                                                                 Container(
-                                                                  color: Colors
-                                                                      .amber,
+                                                                 
                                                                   width: 130,
                                                                   child: Text(
                                                                       pemisahSpasi(dataPeminjam[i]
@@ -413,8 +403,7 @@ class _RiwayatState extends State<Riwayat> {
                                                             Column(
                                                               children: [
                                                                 Container(
-                                                                  color: Colors
-                                                                      .amber,
+                                                                  
                                                                   width: 130,
                                                                   child: Text(
                                                                       pemisahSpasi(dataPeminjam[i]
@@ -447,7 +436,6 @@ class _RiwayatState extends State<Riwayat> {
                                             ),
                                             Container(
                                               width: 460,
-                                              color: Colors.brown,
                                               child: Column(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
