@@ -31,25 +31,30 @@ class _tambah_barangState extends State<tambah_barang> {
   Reference? ref;
   bool ditemukanDuplikat = false;
   bool uploadRealFileName = false;
+  bool iseditImage = false;
 
   //hapus nama file pada database firestore
-  hapusNamaFileFirestore(String namaBarang) async {
+  hapusNamaFileFirestore(String idFile) async {
     print("hapus barang in firestore");
-    String idNamaFileYangDihapus = "";
-    //mencari data yang ingin dihapus
-    await FirebaseFirestore.instance
-        .collection("kumpulanNamaFile")
-        .get()
-        .then((value) => value.docs.forEach((element) {
-              if (element["namaBarang"] == namaBarang) {
-                idNamaFileYangDihapus = element.id.toString();
-              }
-            }));
+    // String idNamaFileYangDihapus = "";
+    // //mencari data yang ingin dihapus
+    // await FirebaseFirestore.instance
+    //     .collection("kumpulanNamaFile")
+    //     .get()
+    //     .then((value) => value.docs.forEach((element) {
+    //           if (element["namaBarang"] == namaBarang) {
+    //             idNamaFileYangDihapus = element.id.toString();
+    //           }
+    //         }));
 
-    //menghapus data
+    // //menghapus data
+    // await FirebaseFirestore.instance
+    //     .collection("kumpulanNamaFile")
+    //     .doc(idNamaFileYangDihapus.toString())
+    //     .delete();
     await FirebaseFirestore.instance
         .collection("kumpulanNamaFile")
-        .doc(idNamaFileYangDihapus.toString())
+        .doc(idFile.toString())
         .delete();
   }
 
@@ -59,19 +64,86 @@ class _tambah_barangState extends State<tambah_barang> {
         .collection("kumpulanNamaFile")
         .get()
         .then((value) => value.docs.forEach((element) {
+              print(filePilihan!.files.first.name);
               if (filePilihan!.files.first.name.toString() ==
-                  element.id.toString()) {
+                  element["namaFileGambar"].toString()) {
                 ditemukanDuplikat = true;
               }
             }));
   }
 
+  editNamaFileFirestore(String idFile, String namaBarangBaru) async {
+    // await FirebaseFirestore.instance
+    //     .collection("kumpulanNamaFile")
+    //     .get()
+    //     .then((value) => value.docs.forEach((element) async {
+    //           if (idFile == element.id.toString()) {
+    //             if (iseditImage) {
+    //               await FirebaseFirestore.instance
+    //                   .collection("kumpulanNamaFile")
+    //                   .doc(element.id.toString())
+    //                   .update({
+    //                 "namaBarang": namaBarangBaru,
+    //                 "namaFileGambar": filePilihan!.files.first.name,
+    //               });
+    //             }else {
+    //               await FirebaseFirestore.instance
+    //                 .collection("kumpulanNamaFile")
+    //                 .doc(element.id.toString())
+    //                 .update({
+    //               "namaBarang": namaBarangBaru,
+    //             });
+    //             }
+
+    //             iseditImage = false;
+
+    //             print("edit barang beerhasil banget" +
+    //                 filePilihan!.files.first.name);
+    //           }
+    //         }));
+
+    if (iseditImage) {
+      print("A");
+      await FirebaseFirestore.instance
+          .collection("kumpulanNamaFile")
+          .doc(idFile.toString())
+          .update({
+        "namaBarang": namaBarangBaru,
+        "namaFileGambar": filePilihan!.files.first.name,
+      });
+    } else {
+      print("AB : " + idFile.toString() + " " + namaBarangBaru);
+      await FirebaseFirestore.instance
+          .collection("kumpulanNamaFile")
+          .doc(idFile.toString())
+          .update({
+        "namaBarang": namaBarangBaru,
+      });
+    }
+
+    iseditImage = false;
+
+    print("edit barang beerhasil banget " + filePilihan!.files.first.name);
+  }
+
   uploadNamaFileFirestore(String namaBarang) async {
     if (!ditemukanDuplikat) {
+      int idCount = 0;
+      await FirebaseFirestore.instance
+          .collection("kumpulanNamaFile")
+          .get()
+          .then((QuerySnapshot snapshot) {
+        snapshot.docs.forEach((element) {
+          if (int.parse(element.id.toString()) >= idCount) {
+            idCount = int.parse(element.id.toString()) + 1;
+          }
+        });
+      });
+
       print("upload data to firestore");
       await FirebaseFirestore.instance
           .collection("kumpulanNamaFile")
-          .doc(filePilihan!.files.first.name)
+          .doc(idCount.toString())
           .set({
         "namaFileGambar": filePilihan!.files.first.name,
         "namaBarang": namaBarang
@@ -272,9 +344,9 @@ class _tambah_barangState extends State<tambah_barang> {
         KumpulanSatuanMeter.add(element["SatuanMeter"]);
       });
     });
+
     print("getbarang");
     print(KumpilanId.length);
-
   }
 
   getEditBarang(int id) async {
@@ -299,17 +371,15 @@ class _tambah_barangState extends State<tambah_barang> {
         }
       }
     });
-    print("getbarang EDIT");
   }
 
   UbahBarang(String NamaBarang, String Gambar, bool Berkode, int id,
       bool SatuanMeter, bool sekaliPakai) async {
+    print("panjang data : " + KumpilanId.length.toString());
     DatabaseServie()
         .EditBarang(NamaBarang, Gambar, Berkode, id, SatuanMeter, sekaliPakai);
     refreshData();
-    setState(() {
-      
-    });
+    setState(() {});
   }
 
   bool isUpload = false;
@@ -325,6 +395,7 @@ class _tambah_barangState extends State<tambah_barang> {
   String _EditdropdownValue = "Tipe";
   bool EditSatuanMeter = false;
   bool EditSekaliPakai = false;
+  String idFileEdit = "";
 
   TextEditingController EditNamaBarang = new TextEditingController();
 
@@ -389,7 +460,21 @@ class _tambah_barangState extends State<tambah_barang> {
                                     Column(
                                       children: [
                                         GestureDetector(
-                                          onTap: () {
+                                          onTap: () async {
+                                            await FirebaseFirestore.instance
+                                                .collection("kumpulanNamaFile")
+                                                .get()
+                                                .then(
+                                              (value) {
+                                                value.docs.forEach((element) {
+                                                  if (KumpulanNama[i].toString() ==
+                                                      element["namaBarang"]) {
+                                                    idFileEdit =
+                                                        element.id.toString();
+                                                  }
+                                                });
+                                              },
+                                            );
                                             showDialog(
                                                 barrierColor: Color.fromARGB(
                                                     141, 7, 7, 7),
@@ -524,7 +609,8 @@ class _tambah_barangState extends State<tambah_barang> {
                                                                                                           onTap: () async {
                                                                                                             Navigator.pop(context);
                                                                                                             Navigator.pop(context);
-                                                                                                            await hapusNamaFileFirestore(KumpulanNama[i]);
+                                                                                                            print("id yang dihapus : " + idFileEdit);
+                                                                                                            await hapusNamaFileFirestore(idFileEdit);
                                                                                                             await DatabaseServie().HapusBarang(KumpilanId[i]);
                                                                                                             refreshData();
                                                                                                             setState(() {});
@@ -644,6 +730,7 @@ class _tambah_barangState extends State<tambah_barang> {
                                                                                                     FilePickerResult? x = await FilePicker.platform.pickFiles();
                                                                                                     if (x != null) {
                                                                                                       setState(() async {
+                                                                                                        iseditImage = true; // keperluan ketika edit namafile di firestore (diperlukan kondisi dimana user merubah gambar atau tidak :)
                                                                                                         filePilihan = x;
                                                                                                         //upload to database
                                                                                                         loadingPanel(context);
@@ -826,6 +913,8 @@ class _tambah_barangState extends State<tambah_barang> {
                                                                                                     //proses penambahan
                                                                                                     if (EditNamaBarang.text != "" && EditurlImage != "") {
                                                                                                       await UbahBarang(EditNamaBarang.text.toString(), EditurlImage!.toString(), berkode, KumpilanId[i], SatuanMeter, EditSekaliPakai);
+                                                                                                      //edit di database kumpulanNamaFile
+                                                                                                      await editNamaFileFirestore(idFileEdit, EditNamaBarang.text);
                                                                                                       //untuk tutup pop up
                                                                                                       Navigator.pop(context);
                                                                                                       Navigator.pop(context);
@@ -835,8 +924,7 @@ class _tambah_barangState extends State<tambah_barang> {
                                                                                                       EditNamaBarang.text = '';
                                                                                                       EditurlImage = '';
                                                                                                       EditSatuanMeter = false;
-                                                                                                      setState((){
-                                                                                                      });
+                                                                                                      setState(() {});
                                                                                                     } else {
                                                                                                       showDialog(
                                                                                                           barrierColor: Color.fromARGB(141, 7, 7, 7),
@@ -1582,6 +1670,7 @@ class _tambah_barangState extends State<tambah_barang> {
                                                               context);
                                                           //untuk mengambalikan data jadi normal
                                                           isUpload = false;
+                                                          SatuanMeter = false;
                                                           _dropdownValue =
                                                               'Tipe';
                                                           Namabarang.text = '';
@@ -1591,6 +1680,7 @@ class _tambah_barangState extends State<tambah_barang> {
                                                         } else {
                                                           showDialog(
                                                               barrierColor:
+                                                                  // ignore: prefer_const_constructors
                                                                   Color
                                                                       .fromARGB(
                                                                           141,

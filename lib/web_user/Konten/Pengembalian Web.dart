@@ -780,6 +780,7 @@ class _Pengembalian_webState extends State<Pengembalian_web> {
                                                               if (kodeAtauJumlahBarangYangDikembalikan ==
                                                                   element[
                                                                       "JumlahatauKodeBarang"]) {
+                                                        print("lkajsdflkjaselfjase;fjas l;fekj : " + kodeAtauJumlahBarangYangDikembalikan);
                                                                 NamaPeminjamSekarang =
                                                                     KumpulanNamaUser[
                                                                         i];
@@ -1484,26 +1485,31 @@ class _Pengembalian_webState extends State<Pengembalian_web> {
                                                                                                                                                   ],
                                                                                                                                                 ),
                                                                                                                                               ),
-                                                                                                                                              GestureDetector(
+                                                                                                                                              GestureDetector(  
                                                                                                                                                 onTap: () async {
-                                                                                                                                                  if (KumpulanStatusBerkode[a]!) {
+                                                                                                                                                  print("tertekan");
+                                                                                                                                                  if (KumpulanStatusBerkode[a]) {
+                                                                                                                                                    print("kumpulkalafljasjdflkas ejflksjf lkshejfaslkfj");
                                                                                                                                                     BarangYangDikembalikan.add(KumpulanNama[i]);
                                                                                                                                                     BarangBerkode.add(KumpulanKode[i]);
                                                                                                                                                     KodeAtauJumlahYangDikembalikan.add(KumpilanBarangBerkode[a].toString());
                                                                                                                                                     BarangYangRusak.add(0.toString());
                                                                                                                                                     isBarangBerkodeYangAkanDikembalikan = KumpulanKode[i];
 
-                                                                                                                                                    docBarangYangDipinjamSekarang = i.toString();
+                                                                                                                                                    docBarangYangDipinjamSekarang = KumpilanId[i].toString();
                                                                                                                                                     //function untuk membaca nama barang berkode yang dipilih (akan dikembalikan oleh user)
                                                                                                                                                     int looping = 0;
-                                                                                                                                                    await FirebaseFirestore.instance.collection("Barang").doc(i.toString()).collection("BarangBarang").get().then((QuerySnapshot value) {
+                                                                                                                                                    await FirebaseFirestore.instance.collection("Barang").doc( KumpilanId[i].toString()).collection("BarangBarang").get().then((QuerySnapshot value) {
                                                                                                                                                       value.docs.forEach((element) {
                                                                                                                                                         if (looping == a) {
                                                                                                                                                           kodeAtauJumlahBarangYangDikembalikan = element["Kode"];
                                                                                                                                                         }
+
                                                                                                                                                         looping++;
                                                                                                                                                       });
                                                                                                                                                     });
+
+                                                                                                                                                    print("isi kode : " + kodeAtauJumlahBarangYangDikembalikan);
 
                                                                                                                                                     Navigator.pop(context);
                                                                                                                                                     Navigator.pop(context);
@@ -1675,8 +1681,7 @@ class _Pengembalian_webState extends State<Pengembalian_web> {
                                                                                                                                   isBarangBerkodeYangAkanDikembalikan = KumpulanKode[i];
                                                                                                                                   kodeAtauJumlahBarangYangDikembalikan = JumlahYangDikembalikanController.text;
 
-                                                                                                                                  docBarangYangDipinjamSekarang = i.toString();
-
+                                                                                                                                  docBarangYangDipinjamSekarang = KumpilanId[i].toString();
                                                                                                                                   Navigator.pop(context);
                                                                                                                                   Navigator.pop(context);
                                                                                                                                   setState(() {});

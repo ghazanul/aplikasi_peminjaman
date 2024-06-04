@@ -1497,7 +1497,7 @@ class _Pengembalian_MobileState extends State<Pengembalian_Mobile> {
                                                                                                                                                       BarangYangRusak.add(0.toString());
                                                                                                                                                       isBarangBerkodeYangAkanDikembalikan = KumpulanKode[i];
 
-                                                                                                                                                      docBarangYangDipinjamSekarang = i.toString();
+                                                                                                                                                      docBarangYangDipinjamSekarang = KumpilanId[i].toString();
                                                                                                                                                       //function untuk membaca nama barang berkode yang dipilih (akan dikembalikan oleh user)
                                                                                                                                                       int looping = 0;
                                                                                                                                                       await FirebaseFirestore.instance.collection("Barang").doc(i.toString()).collection("BarangBarang").get().then((QuerySnapshot value) {
@@ -1680,7 +1680,7 @@ class _Pengembalian_MobileState extends State<Pengembalian_Mobile> {
                                                                                                                                     isBarangBerkodeYangAkanDikembalikan = KumpulanKode[i];
                                                                                                                                     kodeAtauJumlahBarangYangDikembalikan = JumlahYangDikembalikanController.text;
 
-                                                                                                                                    docBarangYangDipinjamSekarang = i.toString();
+                                                                                                                                    docBarangYangDipinjamSekarang = KumpilanId[i].toString();
 
                                                                                                                                     Navigator.pop(context);
                                                                                                                                     Navigator.pop(context);
