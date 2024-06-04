@@ -1490,7 +1490,7 @@ class _Pengembalian_MobileState extends State<Pengembalian_Mobile> {
                                                                                                                                                 ),
                                                                                                                                                 GestureDetector(
                                                                                                                                                   onTap: () async {
-                                                                                                                                                    if (KumpulanStatusBerkode[a]!) {
+                                                                                                                                                    if (KumpulanStatusBerkode[a]) {
                                                                                                                                                       BarangYangDikembalikan.add(KumpulanNama[i]);
                                                                                                                                                       BarangBerkode.add(KumpulanKode[i]);
                                                                                                                                                       KodeAtauJumlahYangDikembalikan.add(KumpilanBarangBerkode[a].toString());
@@ -1500,7 +1500,7 @@ class _Pengembalian_MobileState extends State<Pengembalian_Mobile> {
                                                                                                                                                       docBarangYangDipinjamSekarang = KumpilanId[i].toString();
                                                                                                                                                       //function untuk membaca nama barang berkode yang dipilih (akan dikembalikan oleh user)
                                                                                                                                                       int looping = 0;
-                                                                                                                                                      await FirebaseFirestore.instance.collection("Barang").doc(i.toString()).collection("BarangBarang").get().then((QuerySnapshot value) {
+                                                                                                                                                       await FirebaseFirestore.instance.collection("Barang").doc( KumpilanId[i].toString()).collection("BarangBarang").get().then((QuerySnapshot value) {
                                                                                                                                                         value.docs.forEach((element) {
                                                                                                                                                           if (looping == a) {
                                                                                                                                                             kodeAtauJumlahBarangYangDikembalikan = element["Kode"];
