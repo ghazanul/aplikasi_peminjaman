@@ -780,7 +780,8 @@ class _Pengembalian_webState extends State<Pengembalian_web> {
                                                               if (kodeAtauJumlahBarangYangDikembalikan ==
                                                                   element[
                                                                       "JumlahatauKodeBarang"]) {
-                                                        print("lkajsdflkjaselfjase;fjas l;fekj : " + kodeAtauJumlahBarangYangDikembalikan);
+                                                                print("lkajsdflkjaselfjase;fjas l;fekj : " +
+                                                                    kodeAtauJumlahBarangYangDikembalikan);
                                                                 NamaPeminjamSekarang =
                                                                     KumpulanNamaUser[
                                                                         i];
@@ -1002,9 +1003,23 @@ class _Pengembalian_webState extends State<Pengembalian_web> {
                                                                                             ),
                                                                                           ),
                                                                                           Text(
-                                                                                            ": " + NamaPeminjamSekarang,
+                                                                                            ": ",
                                                                                             style: GoogleFonts.beVietnamPro(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
-                                                                                            textAlign: TextAlign.start,
+                                                                                          ),
+                                                                                          Container(
+                                                                                            width: 140,
+                                                                                            child: SingleChildScrollView(
+                                                                                              scrollDirection: Axis.horizontal,
+                                                                                              child: Row(
+                                                                                                children: [
+                                                                                                  Text(
+                                                                                                    NamaPeminjamSekarang,
+                                                                                                    style: GoogleFonts.beVietnamPro(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                                                    textAlign: TextAlign.start,
+                                                                                                  ),
+                                                                                                ],
+                                                                                              ),
+                                                                                            ),
                                                                                           ),
                                                                                         ],
                                                                                       ),
@@ -1485,7 +1500,7 @@ class _Pengembalian_webState extends State<Pengembalian_web> {
                                                                                                                                                   ],
                                                                                                                                                 ),
                                                                                                                                               ),
-                                                                                                                                              GestureDetector(  
+                                                                                                                                              GestureDetector(
                                                                                                                                                 onTap: () async {
                                                                                                                                                   print("tertekan");
                                                                                                                                                   if (KumpulanStatusBerkode[a]) {
@@ -1499,7 +1514,7 @@ class _Pengembalian_webState extends State<Pengembalian_web> {
                                                                                                                                                     docBarangYangDipinjamSekarang = KumpilanId[i].toString();
                                                                                                                                                     //function untuk membaca nama barang berkode yang dipilih (akan dikembalikan oleh user)
                                                                                                                                                     int looping = 0;
-                                                                                                                                                    await FirebaseFirestore.instance.collection("Barang").doc( KumpilanId[i].toString()).collection("BarangBarang").get().then((QuerySnapshot value) {
+                                                                                                                                                    await FirebaseFirestore.instance.collection("Barang").doc(KumpilanId[i].toString()).collection("BarangBarang").get().then((QuerySnapshot value) {
                                                                                                                                                       value.docs.forEach((element) {
                                                                                                                                                         if (looping == a) {
                                                                                                                                                           kodeAtauJumlahBarangYangDikembalikan = element["Kode"];
@@ -1583,7 +1598,7 @@ class _Pengembalian_webState extends State<Pengembalian_web> {
                                                                                                         ),
                                                                                                       )
                                                                                                     ] else ...[
-                                                                                                      //pinjam Barang Tidak berkode 
+                                                                                                      //pinjam Barang Tidak berkode
                                                                                                       GestureDetector(
                                                                                                         onTap: () {
                                                                                                           showDialog(

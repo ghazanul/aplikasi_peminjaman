@@ -1577,9 +1577,7 @@ class _Peminjaman_WebState extends State<Peminjaman_Web> {
                                                                       ),
                                                                     ),
                                                                     Text(
-                                                                      ": " +
-                                                                          NamaPeminjamController
-                                                                              .text,
+                                                                      ": ",
                                                                       style: GoogleFonts.beVietnamPro(
                                                                           fontSize:
                                                                               15,
@@ -1587,9 +1585,26 @@ class _Peminjaman_WebState extends State<Peminjaman_Web> {
                                                                               .bold,
                                                                           color:
                                                                               Colors.white),
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .start,
+                                                                    ),
+                                                                    Container(
+                                                                      width:
+                                                                          165,
+                                                                      child:
+                                                                          SingleChildScrollView(
+                                                                        scrollDirection:
+                                                                            Axis.horizontal,
+                                                                        child:
+                                                                            Text(
+                                                                          NamaPeminjamController
+                                                                              .text,
+                                                                          style: GoogleFonts.beVietnamPro(
+                                                                              fontSize: 15,
+                                                                              fontWeight: FontWeight.bold,
+                                                                              color: Colors.white),
+                                                                          textAlign:
+                                                                              TextAlign.start,
+                                                                        ),
+                                                                      ),
                                                                     ),
                                                                   ],
                                                                 ),
@@ -1801,6 +1816,8 @@ class _Peminjaman_WebState extends State<Peminjaman_Web> {
                                                             NoTelponController
                                                                 .text = "";
                                                             KumpulanSatuanMeterYangDipinjam
+                                                                .clear();
+                                                            KumpulanSekaliPakaiDiPinjam
                                                                 .clear();
                                                             BarangYangDipinjam
                                                                 .clear();

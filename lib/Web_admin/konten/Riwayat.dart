@@ -59,48 +59,55 @@ class _RiwayatState extends State<Riwayat> {
 
   mengambilDataReportPinjman() async {
     //pengambilan data pada database report satu persatu sesuai dengan class pada datapeminjam
-    await FirebaseFirestore.instance.collection("Report").get().then((value) =>
-        value.docs.forEach((element) {
-          DataPeminjam DataSementar = new DataPeminjam();
-          DataSementar.NamaPeminjam = element["NamaPeminjam"];
-          DataSementar.NoTelpon = element["NoTelpon"];
-          DataSementar.NamaBarang = element["NamaBarang"];
-          DataSementar.berM = element["berM"];
+    await FirebaseFirestore.instance
+        .collection("Report")
+        .orderBy("id", descending: false)
+        .get()
+        .then((value) => value.docs.forEach((element) {
+              DataPeminjam DataSementar = new DataPeminjam();
+              DataSementar.NamaPeminjam = element["NamaPeminjam"];
+              DataSementar.NoTelpon = element["NoTelpon"];
+              DataSementar.NamaBarang = element["NamaBarang"];
+              DataSementar.berM = element["berM"];
 
-          DataSementar.percobaanPeminjaman = element["percobaanPeminjaman"];
-          //ketika telah berisi
-          for (int i = 0;
-              i < (int.parse(element["percobaanPeminjaman"].toString()));
-              i++) {
-            DataSementar.KodeBarang.add(element["KodeBarang"][i]);
-            DataSementar.JumlahPeminjaman.add(element["JumlahPeminjaman"][i]);
-            DataSementar.Jampeminjam.add(element["jamPeminjaman"][i]);
-            DataSementar.TanggalPeminjman.add(element["tanggalPeminjaman"][i]);
-          }
+              DataSementar.percobaanPeminjaman = element["percobaanPeminjaman"];
+              //ketika telah berisi
+              for (int i = 0;
+                  i < (int.parse(element["percobaanPeminjaman"].toString()));
+                  i++) {
+                DataSementar.KodeBarang.add(element["KodeBarang"][i]);
+                DataSementar.JumlahPeminjaman.add(
+                    element["JumlahPeminjaman"][i]);
+                DataSementar.Jampeminjam.add(element["jamPeminjaman"][i]);
+                DataSementar.TanggalPeminjman.add(
+                    element["tanggalPeminjaman"][i]);
+              }
 
-          DataSementar.PercobaanPengembalian = element["PercobaanPengembalian"];
-          //kalo pengembalian user tidak ada maka (-) isinya
-          if (int.parse(element["PercobaanPengembalian"].toString()) == 0) {
-            DataSementar.jumlahPengembalian.add("-");
-            DataSementar.jamPengembalian.add("-");
-            DataSementar.tanggalPengembalian.add("-");
-          } else {
-            //ketika telah berisi
-            for (int i = 0;
-                i < int.parse(element["PercobaanPengembalian"].toString());
-                i++) {
-              DataSementar.jumlahPengembalian
-                  .add(element["jumlahPengembalian"][i]);
+              DataSementar.PercobaanPengembalian =
+                  element["PercobaanPengembalian"];
+              //kalo pengembalian user tidak ada maka (-) isinya
+              if (int.parse(element["PercobaanPengembalian"].toString()) == 0) {
+                DataSementar.jumlahPengembalian.add("-");
+                DataSementar.jamPengembalian.add("-");
+                DataSementar.tanggalPengembalian.add("-");
+              } else {
+                //ketika telah berisi
+                for (int i = 0;
+                    i < int.parse(element["PercobaanPengembalian"].toString());
+                    i++) {
+                  DataSementar.jumlahPengembalian
+                      .add(element["jumlahPengembalian"][i]);
 
-              DataSementar.jamPengembalian.add(element["jamPengembalian"][i]);
+                  DataSementar.jamPengembalian
+                      .add(element["jamPengembalian"][i]);
 
-              DataSementar.tanggalPengembalian
-                  .add(element["tanggalPengembalian"][i]);
-            }
-          }
+                  DataSementar.tanggalPengembalian
+                      .add(element["tanggalPengembalian"][i]);
+                }
+              }
 
-          dataPeminjam.add(DataSementar);
-        }));
+              dataPeminjam.add(DataSementar);
+            }));
   }
 
   bool isUpload = false;
@@ -244,534 +251,825 @@ class _RiwayatState extends State<Riwayat> {
                             height: 565,
                             child: SingleChildScrollView(
                               child: Column(
+
                                 children: [
                                   for (int i = 0; i < dataPeminjam.length; i++)
-                                    Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Container(
-                                              width: 130,
-                                              height: 70,
-                                              child: Center(
-                                                child: Text(
-                                                    dataPeminjam[i]
-                                                        .NamaPeminjam,
-                                                    style: GoogleFonts
-                                                        .beVietnamPro(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 15,
-                                                      color: Colors.white,
-                                                    ),
-                                                    textAlign:
-                                                        TextAlign.center),
+                                    Container(
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Container(
+                                                width: 130,
+                                                height: 70,
+                                                child: Center(
+                                                  child: Text(
+                                                      dataPeminjam[i]
+                                                          .NamaPeminjam,
+                                                      style: GoogleFonts
+                                                          .beVietnamPro(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 15,
+                                                        color: Colors.white,
+                                                      ),
+                                                      textAlign:
+                                                          TextAlign.center),
+                                                ),
                                               ),
-                                            ),
-                                            Container(
-                                              width: 130,
-                                              height: 70,
-                                              child: Center(
-                                                child: Text(
-                                                    dataPeminjam[i].NoTelpon,
-                                                    style: GoogleFonts
-                                                        .beVietnamPro(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 15,
-                                                      color: Colors.white,
-                                                    ),
-                                                    textAlign:
-                                                        TextAlign.center),
+                                              Container(
+                                                width: 130,
+                                                height: 70,
+                                                child: Center(
+                                                  child: Text(
+                                                      dataPeminjam[i].NoTelpon,
+                                                      style: GoogleFonts
+                                                          .beVietnamPro(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 15,
+                                                        color: Colors.white,
+                                                      ),
+                                                      textAlign:
+                                                          TextAlign.center),
+                                                ),
                                               ),
-                                            ),
-                                            Container(
-                                              width: 130,
-                                              height: 70,
-                                              child: Center(
-                                                child: Text(
-                                                    dataPeminjam[i].NamaBarang,
-                                                    style: GoogleFonts
-                                                        .beVietnamPro(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 15,
-                                                      color: Colors.white,
-                                                    ),
-                                                    textAlign:
-                                                        TextAlign.center),
+                                              Container(
+                                                width: 130,
+                                                height: 70,
+                                                child: Center(
+                                                  child: Text(
+                                                      dataPeminjam[i].NamaBarang,
+                                                      style: GoogleFonts
+                                                          .beVietnamPro(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 15,
+                                                        color: Colors.white,
+                                                      ),
+                                                      textAlign:
+                                                          TextAlign.center),
+                                                ),
                                               ),
-                                            ),
-                                            Container(
-                                              width: 625,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  for (int j = 0;
-                                                      j <
-                                                          dataPeminjam[i]
-                                                              .Jampeminjam
-                                                              .length;
-                                                      j++)
-                                                    Column(
-                                                      children: [
-                                                        SizedBox(
-                                                          height: 5,
-                                                        ),
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Column(
-                                                              children: [
-                                                                Container(
-                                                                  
-                                                                  width: 130,
-                                                                  child: Text( !dataPeminjam[i].berM ?
-                                                                      pemisahSpasi(dataPeminjam[i]
-                                                                              .JumlahPeminjaman[
-                                                                          j]) : pemisahSpasi(dataPeminjam[i]
-                                                                              .JumlahPeminjaman[
-                                                                          j]) + " M",
-                                                                      style: GoogleFonts
-                                                                          .beVietnamPro(
-                                                                        fontWeight:
-                                                                            FontWeight.bold,
-                                                                        fontSize:
-                                                                            15,
-                                                                        color: Colors
-                                                                            .white,
-                                                                      ),
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .center),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            Column(
-                                                              children: [
-                                                                Container(
-                                                                  
-                                                                  width: 130,
-                                                                  child: Text(
-                                                                      pemisahSpasi(dataPeminjam[i]
-                                                                              .KodeBarang[
-                                                                          j]),
-                                                                      style: GoogleFonts
-                                                                          .beVietnamPro(
-                                                                        fontWeight:
-                                                                            FontWeight.bold,
-                                                                        fontSize:
-                                                                            15,
-                                                                        color: Colors
-                                                                            .white,
-                                                                      ),
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .center),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            Column(
-                                                              children: [
-                                                                Container(
-                                                                 
-                                                                  width: 130,
-                                                                  child: Text(
-                                                                      pemisahSpasi(dataPeminjam[i]
-                                                                              .Jampeminjam[
-                                                                          j]),
-                                                                      style: GoogleFonts
-                                                                          .beVietnamPro(
-                                                                        fontWeight:
-                                                                            FontWeight.bold,
-                                                                        fontSize:
-                                                                            15,
-                                                                        color: Colors
-                                                                            .white,
-                                                                      ),
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .center),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            Column(
-                                                              children: [
-                                                                Container(
-                                                                  
-                                                                  width: 130,
-                                                                  child: Text(
-                                                                      pemisahSpasi(dataPeminjam[i]
-                                                                              .TanggalPeminjman[
-                                                                          j]),
-                                                                      style: GoogleFonts
-                                                                          .beVietnamPro(
-                                                                        fontWeight:
-                                                                            FontWeight.bold,
-                                                                        fontSize:
-                                                                            15,
-                                                                        color: Colors
-                                                                            .white,
-                                                                      ),
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .center),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        SizedBox(
-                                                          height: 5,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                ],
+                                              Container(
+                                                width: 625,
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    for (int j = 0;
+                                                        j <
+                                                            dataPeminjam[i]
+                                                                .Jampeminjam
+                                                                .length;
+                                                        j++)
+                                                      Column(
+                                                        children: [
+                                                          SizedBox(
+                                                            height: 5,
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Column(
+                                                                children: [
+                                                                  Container(
+
+                                                                    width: 130,
+                                                                    child: Text( !dataPeminjam[i].berM ?
+                                                                        pemisahSpasi(dataPeminjam[i]
+                                                                                .JumlahPeminjaman[
+                                                                            j]) : pemisahSpasi(dataPeminjam[i]
+                                                                                .JumlahPeminjaman[
+                                                                            j]) + " M",
+                                                                        style: GoogleFonts
+                                                                            .beVietnamPro(
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                          fontSize:
+                                                                              15,
+                                                                          color: Colors
+                                                                              .white,
+                                                                        ),
+                                                                        textAlign:
+                                                                            TextAlign
+                                                                                .center),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              Column(
+                                                                children: [
+                                                                  Container(
+
+                                                                    width: 130,
+                                                                    child: Text(
+                                                                        pemisahSpasi(dataPeminjam[i]
+                                                                                .KodeBarang[
+                                                                            j]),
+                                                                        style: GoogleFonts
+                                                                            .beVietnamPro(
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                          fontSize:
+                                                                              15,
+                                                                          color: Colors
+                                                                              .white,
+                                                                        ),
+                                                                        textAlign:
+                                                                            TextAlign
+                                                                                .center),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              Column(
+                                                                children: [
+                                                                  Container(
+
+                                                                    width: 130,
+                                                                    child: Text(
+                                                                        pemisahSpasi(dataPeminjam[i]
+                                                                                .Jampeminjam[
+                                                                            j]),
+                                                                        style: GoogleFonts
+                                                                            .beVietnamPro(
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                          fontSize:
+                                                                              15,
+                                                                          color: Colors
+                                                                              .white,
+                                                                        ),
+                                                                        textAlign:
+                                                                            TextAlign
+                                                                                .center),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              Column(
+                                                                children: [
+                                                                  Container(
+
+                                                                    width: 130,
+                                                                    child: Text(
+                                                                        pemisahSpasi(dataPeminjam[i]
+                                                                                .TanggalPeminjman[
+                                                                            j]),
+                                                                        style: GoogleFonts
+                                                                            .beVietnamPro(
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                          fontSize:
+                                                                              15,
+                                                                          color: Colors
+                                                                              .white,
+                                                                        ),
+                                                                        textAlign:
+                                                                            TextAlign
+                                                                                .center),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          SizedBox(
+                                                            height: 5,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                            Container(
-                                              width: 460,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  for (int j = 0;
-                                                      j <
-                                                          dataPeminjam[i]
-                                                              .jamPengembalian
-                                                              .length;
-                                                      j++)
-                                                    Column(
-                                                      children: [
-                                                        SizedBox(
-                                                          height: 5,
-                                                        ),
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Column(
-                                                              children: [
-                                                                Container(
-                                                                  width: 130,
-                                                                  child: Text(!dataPeminjam[i].berM ?
-                                                                      pemisahSpasi(dataPeminjam[i]
-                                                                              .jumlahPengembalian[
-                                                                          j]) : pemisahSpasi(dataPeminjam[i]
-                                                                              .jumlahPengembalian[
-                                                                          j]) + " M",
-                                                                      style: GoogleFonts
-                                                                          .beVietnamPro(
-                                                                        fontWeight:
-                                                                            FontWeight.bold,
-                                                                        fontSize:
-                                                                            15,
-                                                                        color: Colors
-                                                                            .white,
-                                                                      ),
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .center),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            Column(
-                                                              children: [
-                                                                Container(
-                                                                  width: 130,
-                                                                  child: Text(
-                                                                      pemisahSpasi(dataPeminjam[i]
-                                                                              .jamPengembalian[
-                                                                          j]),
-                                                                      style: GoogleFonts
-                                                                          .beVietnamPro(
-                                                                        fontWeight:
-                                                                            FontWeight.bold,
-                                                                        fontSize:
-                                                                            15,
-                                                                        color: Colors
-                                                                            .white,
-                                                                      ),
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .center),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            Column(
-                                                              children: [
-                                                                Container(
-                                                                  width: 130,
-                                                                  child: Text(
-                                                                      pemisahSpasi(dataPeminjam[i]
-                                                                              .tanggalPengembalian[
-                                                                          j]),
-                                                                      style: GoogleFonts
-                                                                          .beVietnamPro(
-                                                                        fontWeight:
-                                                                            FontWeight.bold,
-                                                                        fontSize:
-                                                                            15,
-                                                                        color: Colors
-                                                                            .white,
-                                                                      ),
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .center),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        SizedBox(
-                                                          height: 5,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                ],
+                                              Container(
+                                                width: 460,
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    for (int j = 0;
+                                                        j <
+                                                            dataPeminjam[i]
+                                                                .jamPengembalian
+                                                                .length;
+                                                        j++)
+                                                      Column(
+                                                        children: [
+                                                          SizedBox(
+                                                            height: 5,
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Column(
+                                                                children: [
+                                                                  Container(
+                                                                    width: 130,
+                                                                    child: Text(!dataPeminjam[i].berM ?
+                                                                        pemisahSpasi(dataPeminjam[i]
+                                                                                .jumlahPengembalian[
+                                                                            j]) : pemisahSpasi(dataPeminjam[i]
+                                                                                .jumlahPengembalian[
+                                                                            j]) + " M",
+                                                                        style: GoogleFonts
+                                                                            .beVietnamPro(
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                          fontSize:
+                                                                              15,
+                                                                          color: Colors
+                                                                              .white,
+                                                                        ),
+                                                                        textAlign:
+                                                                            TextAlign
+                                                                                .center),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              Column(
+                                                                children: [
+                                                                  Container(
+                                                                    width: 130,
+                                                                    child: Text(
+                                                                        pemisahSpasi(dataPeminjam[i]
+                                                                                .jamPengembalian[
+                                                                            j]),
+                                                                        style: GoogleFonts
+                                                                            .beVietnamPro(
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                          fontSize:
+                                                                              15,
+                                                                          color: Colors
+                                                                              .white,
+                                                                        ),
+                                                                        textAlign:
+                                                                            TextAlign
+                                                                                .center),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              Column(
+                                                                children: [
+                                                                  Container(
+                                                                    width: 130,
+                                                                    child: Text(
+                                                                        pemisahSpasi(dataPeminjam[i]
+                                                                                .tanggalPengembalian[
+                                                                            j]),
+                                                                        style: GoogleFonts
+                                                                            .beVietnamPro(
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                          fontSize:
+                                                                              15,
+                                                                          color: Colors
+                                                                              .white,
+                                                                        ),
+                                                                        textAlign:
+                                                                            TextAlign
+                                                                                .center),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          SizedBox(
+                                                            height: 5,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Container(
-                                          width: 1620,
-                                          height: 4,
-                                          color: const Color.fromARGB(
-                                              255, 71, 71, 75),
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                      ],
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Container(
+                                            width: 1620,
+                                            height: 4,
+                                            color: const Color.fromARGB(
+                                                255, 71, 71, 75),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                 ],
                               ),
                             ),
                           ),
 
-                          // Row(
-                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          //   children: [
-                          //     Container(
-                          //       width: 130,
-                          //       height: 70,
-                          //       child: Center(
-                          //         child: Text("Ghazanul",
-                          //             style: GoogleFonts.beVietnamPro(
-                          //               fontWeight: FontWeight.bold,
-                          //               fontSize: 15,
-                          //               color: Colors.white,
-                          //             ),
-                          //             textAlign: TextAlign.center),
-                          //       ),
-                          //     ),
-                          //     Container(
-                          //       width: 130,
-                          //       color: Colors.red,
-                          //       child: Text("081234567890",
-                          //           style: GoogleFonts.beVietnamPro(
-                          //             fontWeight: FontWeight.bold,
-                          //             fontSize: 15,
-                          //             color: Colors.white,
-                          //           ),
-                          //           textAlign: TextAlign.center),
-                          //     ),
-                          //     Container(
-                          //       width: 130,
-                          //       height: 70,
-                          //       color: Colors.amber,
-                          //       child: Center(
-                          //         child: Text("RJ45",
-                          //             style: GoogleFonts.beVietnamPro(
-                          //               fontWeight: FontWeight.bold,
-                          //               fontSize: 15,
-                          //               color: Colors.white,
-                          //             ),
-                          //             textAlign: TextAlign.center),
-                          //       ),
-                          //     ),
-                          //     Container(
-                          //       width: 130,
-                          //       child: Text("70",
-                          //           style: GoogleFonts.beVietnamPro(
-                          //             fontWeight: FontWeight.bold,
-                          //             fontSize: 15,
-                          //             color: Colors.white,
-                          //           ),
-                          //           textAlign: TextAlign.center),
-                          //     ),
-                          //     Container(
-                          //       width: 130,
-                          //       child: Text("-",
-                          //           style: GoogleFonts.beVietnamPro(
-                          //             fontWeight: FontWeight.bold,
-                          //             fontSize: 15,
-                          //             color: Colors.white,
-                          //           ),
-                          //           textAlign: TextAlign.center),
-                          //     ),
-                          //     Container(
-                          //       width: 130,
-                          //       child: Text("08.00",
-                          //           style: GoogleFonts.beVietnamPro(
-                          //             fontWeight: FontWeight.bold,
-                          //             fontSize: 15,
-                          //             color: Colors.white,
-                          //           ),
-                          //           textAlign: TextAlign.center),
-                          //     ),
-                          //     Container(
-                          //       width: 130,
-                          //       height: 70,
-                          //       color: Colors.amber,
-                          //       child: Center(
-                          //         child: Text("02 - 03 - 2024",
-                          //             style: GoogleFonts.beVietnamPro(
-                          //               fontWeight: FontWeight.bold,
-                          //               fontSize: 15,
-                          //               color: Colors.white,
-                          //             ),
-                          //             textAlign: TextAlign.center),
-                          //       ),
-                          //     ),
-                          //     Container(
-                          //       width: 460,
-                          //       color: Colors.brown,
-                          //       child: Column(
-                          //         children: [
-                          //           Row(
-                          //             mainAxisAlignment:
-                          //                 MainAxisAlignment.spaceBetween,
+
+
+                          //=========================update sudah ada batasan tinggi dari intem-peritem
+                          ///Container(
+                          //   height: 565,
+                          //   child: SingleChildScrollView(
+                          //     child: Column(
+                          //       children: [
+                          //         for (int i = 0; i < dataPeminjam.length; i++)
+                          //           Column(
                           //             children: [
-                          //               Column(
+                          //               Row(
+                          //                 mainAxisAlignment:
+                          //                     MainAxisAlignment.spaceBetween,
+                          //                     crossAxisAlignment: CrossAxisAlignment.start,
                           //                 children: [
                           //                   Container(
-                          //                     color: Colors.blueAccent,
                           //                     width: 130,
-                          //                     child: Text("20",
-                          //                         style:
-                          //                             GoogleFonts.beVietnamPro(
-                          //                           fontWeight: FontWeight.bold,
+                          //                     child: Text(
+                          //                         dataPeminjam[i]
+                          //                             .NamaPeminjam,
+                          //                         style: GoogleFonts
+                          //                             .beVietnamPro(
+                          //                           fontWeight:
+                          //                               FontWeight.bold,
                           //                           fontSize: 15,
                           //                           color: Colors.white,
                           //                         ),
-                          //                         textAlign: TextAlign.center),
+                          //                         textAlign:
+                          //                             TextAlign.center),
+                          //                   ),
+                          //                   Container(
+                          //                     width: 130,
+                          //                     child: Text(
+                          //                         dataPeminjam[i].NoTelpon,
+                          //                         style: GoogleFonts
+                          //                             .beVietnamPro(
+                          //                           fontWeight:
+                          //                               FontWeight.bold,
+                          //                           fontSize: 15,
+                          //                           color: Colors.white,
+                          //                         ),
+                          //                         textAlign:
+                          //                             TextAlign.center),
+                          //                   ),
+                          //                   Container(
+                          //                     width: 130,
+                          //                     child: Text(
+                          //                         dataPeminjam[i].NamaBarang,
+                          //                         style: GoogleFonts
+                          //                             .beVietnamPro(
+                          //                           fontWeight:
+                          //                               FontWeight.bold,
+                          //                           fontSize: 15,
+                          //                           color: Colors.white,
+                          //                         ),
+                          //                         textAlign:
+                          //                             TextAlign.center),
+                          //                   ),
+                          //                   //komponen berulang (pengecekan apakah lebih dari 5 komponen atau tidak )
+                          //                   dataPeminjam[i].Jampeminjam.length >= 5 || dataPeminjam[i].jamPengembalian.length >= 5 ?
+                          //                   Container(
+                          //                     height: 150,
+                          //                     child: SingleChildScrollView(
+                          //                       child: Row(
+                          //                         crossAxisAlignment: CrossAxisAlignment.start,
+                          //                         children: [
+                          //                           Container(
+                          //                             width: 625,
+                          //                             child: Column(
+                          //                               mainAxisAlignment:
+                          //                                   MainAxisAlignment
+                          //                                       .start,
+                          //                               children: [
+                          //                                 for (int j = 0;
+                          //                                     j <
+                          //                                         dataPeminjam[
+                          //                                                 i]
+                          //                                             .Jampeminjam
+                          //                                             .length;
+                          //                                     j++)
+                          //                                   Column(
+                          //                                     children: [
+                          //                                       SizedBox(
+                          //                                         height: 5,
+                          //                                       ),
+                          //                                       Row(
+                          //                                         children: [
+                          //                                           Container(
+                          //                                             width:
+                          //                                                 130,
+                          //                                             child: Text(
+                          //                                                 !dataPeminjam[i].berM
+                          //                                                     ? pemisahSpasi(dataPeminjam[i].JumlahPeminjaman[
+                          //                                                         j])
+                          //                                                     : pemisahSpasi(dataPeminjam[i].JumlahPeminjaman[j]) +
+                          //                                                         " M",
+                          //                                                 style: GoogleFonts
+                          //                                                     .beVietnamPro(
+                          //                                                   fontWeight:
+                          //                                                       FontWeight.bold,
+                          //                                                   fontSize:
+                          //                                                       15,
+                          //                                                   color:
+                          //                                                       Colors.white,
+                          //                                                 ),
+                          //                                                 textAlign:
+                          //                                                     TextAlign.center),
+                          //                                           ),
+                          //                                           SizedBox(
+                          //                                             width: 35,
+                          //                                           ),
+                          //                                           Container(
+                          //                                             width:
+                          //                                                 130,
+                          //                                             child: Text(
+                          //                                                 pemisahSpasi(dataPeminjam[i].KodeBarang[
+                          //                                                     j]),
+                          //                                                 style: GoogleFonts
+                          //                                                     .beVietnamPro(
+                          //                                                   fontWeight:
+                          //                                                       FontWeight.bold,
+                          //                                                   fontSize:
+                          //                                                       15,
+                          //                                                   color:
+                          //                                                       Colors.white,
+                          //                                                 ),
+                          //                                                 textAlign:
+                          //                                                     TextAlign.center),
+                          //                                           ),
+                          //                                           SizedBox(
+                          //                                             width: 35,
+                          //                                           ),
+                          //                                           Container(
+                          //                                             width:
+                          //                                                 130,
+                          //                                             child: Text(
+                          //                                                 pemisahSpasi(dataPeminjam[i].Jampeminjam[
+                          //                                                     j]),
+                          //                                                 style: GoogleFonts
+                          //                                                     .beVietnamPro(
+                          //                                                   fontWeight:
+                          //                                                       FontWeight.bold,
+                          //                                                   fontSize:
+                          //                                                       15,
+                          //                                                   color:
+                          //                                                       Colors.white,
+                          //                                                 ),
+                          //                                                 textAlign:
+                          //                                                     TextAlign.center),
+                          //                                           ),
+                          //                                           SizedBox(
+                          //                                             width: 35,
+                          //                                           ),
+                          //                                           Container(
+                          //                                             width:
+                          //                                                 130,
+                          //                                             child: Text(
+                          //                                                 pemisahSpasi(dataPeminjam[i].TanggalPeminjman[
+                          //                                                     j]),
+                          //                                                 style: GoogleFonts
+                          //                                                     .beVietnamPro(
+                          //                                                   fontWeight:
+                          //                                                       FontWeight.bold,
+                          //                                                   fontSize:
+                          //                                                       15,
+                          //                                                   color:
+                          //                                                       Colors.white,
+                          //                                                 ),
+                          //                                                 textAlign:
+                          //                                                     TextAlign.center),
+                          //                                           ),
+                          //                                         ],
+                          //                                       ),
+                          //                                       SizedBox(
+                          //                                         height: 5,
+                          //                                       ),
+                          //                                     ],
+                          //                                   ),
+                          //                               ],
+                          //                             ),
+                          //                           ),
+                          //                           SizedBox(
+                          //                             width: 30,
+                          //                           ),
+                          //                           Container(
+                          //                             width: 460,
+                          //                             child: Column(
+                          //                               mainAxisAlignment:
+                          //                                   MainAxisAlignment
+                          //                                       .center,
+                          //                               children: [
+                          //                                 for (int j = 0;
+                          //                                     j <
+                          //                                         dataPeminjam[
+                          //                                                 i]
+                          //                                             .jamPengembalian
+                          //                                             .length;
+                          //                                     j++)
+                          //                                   Column(
+                          //                                     children: [
+                          //                                       SizedBox(
+                          //                                         height: 5,
+                          //                                       ),
+                          //                                       Row(
+                          //                                         mainAxisAlignment:
+                          //                                             MainAxisAlignment
+                          //                                                 .spaceBetween,
+                          //                                         children: [
+                          //                                           Column(
+                          //                                             children: [
+                          //                                               Container(
+                          //                                                 width:
+                          //                                                     130,
+                          //                                                 child: Text(
+                          //                                                     !dataPeminjam[i].berM ? pemisahSpasi(dataPeminjam[i].jumlahPengembalian[j]) : pemisahSpasi(dataPeminjam[i].jumlahPengembalian[j]) + " M",
+                          //                                                     style: GoogleFonts.beVietnamPro(
+                          //                                                       fontWeight: FontWeight.bold,
+                          //                                                       fontSize: 15,
+                          //                                                       color: Colors.white,
+                          //                                                     ),
+                          //                                                     textAlign: TextAlign.center),
+                          //                                               ),
+                          //                                             ],
+                          //                                           ),
+                          //                                           Column(
+                          //                                             children: [
+                          //                                               Container(
+                          //                                                 width:
+                          //                                                     130,
+                          //                                                 child: Text(
+                          //                                                     pemisahSpasi(dataPeminjam[i].jamPengembalian[j]),
+                          //                                                     style: GoogleFonts.beVietnamPro(
+                          //                                                       fontWeight: FontWeight.bold,
+                          //                                                       fontSize: 15,
+                          //                                                       color: Colors.white,
+                          //                                                     ),
+                          //                                                     textAlign: TextAlign.center),
+                          //                                               ),
+                          //                                             ],
+                          //                                           ),
+                          //                                           Column(
+                          //                                             children: [
+                          //                                               Container(
+                          //                                                 width:
+                          //                                                     130,
+                          //                                                 child: Text(
+                          //                                                     pemisahSpasi(dataPeminjam[i].tanggalPengembalian[j]),
+                          //                                                     style: GoogleFonts.beVietnamPro(
+                          //                                                       fontWeight: FontWeight.bold,
+                          //                                                       fontSize: 15,
+                          //                                                       color: Colors.white,
+                          //                                                     ),
+                          //                                                     textAlign: TextAlign.center),
+                          //                                               ),
+                          //                                             ],
+                          //                                           ),
+                          //                                         ],
+                          //                                       ),
+                          //                                       SizedBox(
+                          //                                         height: 5,
+                          //                                       ),
+                          //                                     ],
+                          //                                   ),
+                          //                               ],
+                          //                             ),
+                          //                           ),
+                          //                         ],
+                          //                       ),
+                          //                     ),
+                          //                   )
+                          //                   : // ==========================================================================
+                          //                   Container(
+                          //                     // height: 150,
+                          //                     child: SingleChildScrollView(
+                          //                       child: Row(
+                          //                         crossAxisAlignment: CrossAxisAlignment.start,
+                          //                         children: [
+                          //                           Container(
+                          //                             width: 625,
+                          //                             child: Column(
+                          //                               mainAxisAlignment:
+                          //                                   MainAxisAlignment
+                          //                                       .start,
+                          //                               children: [
+                          //                                 for (int j = 0;
+                          //                                     j <
+                          //                                         dataPeminjam[
+                          //                                                 i]
+                          //                                             .Jampeminjam
+                          //                                             .length;
+                          //                                     j++)
+                          //                                   Column(
+                          //                                     children: [
+                          //                                       SizedBox(
+                          //                                         height: 5,
+                          //                                       ),
+                          //                                       Row(
+                          //                                         children: [
+                          //                                           Container(
+                          //                                             width:
+                          //                                                 130,
+                          //                                             child: Text(
+                          //                                                 !dataPeminjam[i].berM
+                          //                                                     ? pemisahSpasi(dataPeminjam[i].JumlahPeminjaman[
+                          //                                                         j])
+                          //                                                     : pemisahSpasi(dataPeminjam[i].JumlahPeminjaman[j]) +
+                          //                                                         " M",
+                          //                                                 style: GoogleFonts
+                          //                                                     .beVietnamPro(
+                          //                                                   fontWeight:
+                          //                                                       FontWeight.bold,
+                          //                                                   fontSize:
+                          //                                                       15,
+                          //                                                   color:
+                          //                                                       Colors.white,
+                          //                                                 ),
+                          //                                                 textAlign:
+                          //                                                     TextAlign.center),
+                          //                                           ),
+                          //                                           SizedBox(
+                          //                                             width: 35,
+                          //                                           ),
+                          //                                           Container(
+                          //                                             width:
+                          //                                                 130,
+                          //                                             child: Text(
+                          //                                                 pemisahSpasi(dataPeminjam[i].KodeBarang[
+                          //                                                     j]),
+                          //                                                 style: GoogleFonts
+                          //                                                     .beVietnamPro(
+                          //                                                   fontWeight:
+                          //                                                       FontWeight.bold,
+                          //                                                   fontSize:
+                          //                                                       15,
+                          //                                                   color:
+                          //                                                       Colors.white,
+                          //                                                 ),
+                          //                                                 textAlign:
+                          //                                                     TextAlign.center),
+                          //                                           ),
+                          //                                           SizedBox(
+                          //                                             width: 35,
+                          //                                           ),
+                          //                                           Container(
+                          //                                             width:
+                          //                                                 130,
+                          //                                             child: Text(
+                          //                                                 pemisahSpasi(dataPeminjam[i].Jampeminjam[
+                          //                                                     j]),
+                          //                                                 style: GoogleFonts
+                          //                                                     .beVietnamPro(
+                          //                                                   fontWeight:
+                          //                                                       FontWeight.bold,
+                          //                                                   fontSize:
+                          //                                                       15,
+                          //                                                   color:
+                          //                                                       Colors.white,
+                          //                                                 ),
+                          //                                                 textAlign:
+                          //                                                     TextAlign.center),
+                          //                                           ),
+                          //                                           SizedBox(
+                          //                                             width: 35,
+                          //                                           ),
+                          //                                           Container(
+                          //                                             width:
+                          //                                                 130,
+                          //                                             child: Text(
+                          //                                                 pemisahSpasi(dataPeminjam[i].TanggalPeminjman[
+                          //                                                     j]),
+                          //                                                 style: GoogleFonts
+                          //                                                     .beVietnamPro(
+                          //                                                   fontWeight:
+                          //                                                       FontWeight.bold,
+                          //                                                   fontSize:
+                          //                                                       15,
+                          //                                                   color:
+                          //                                                       Colors.white,
+                          //                                                 ),
+                          //                                                 textAlign:
+                          //                                                     TextAlign.center),
+                          //                                           ),
+                          //                                         ],
+                          //                                       ),
+                          //                                       SizedBox(
+                          //                                         height: 5,
+                          //                                       ),
+                          //                                     ],
+                          //                                   ),
+                          //                               ],
+                          //                             ),
+                          //                           ),
+                          //                           SizedBox(
+                          //                             width: 30,
+                          //                           ),
+                          //                           Container(
+                          //                             width: 460,
+                          //                             child: Column(
+                          //                               mainAxisAlignment:
+                          //                                   MainAxisAlignment
+                          //                                       .center,
+                          //                               children: [
+                          //                                 for (int j = 0;
+                          //                                     j <
+                          //                                         dataPeminjam[
+                          //                                                 i]
+                          //                                             .jamPengembalian
+                          //                                             .length;
+                          //                                     j++)
+                          //                                   Column(
+                          //                                     children: [
+                          //                                       SizedBox(
+                          //                                         height: 5,
+                          //                                       ),
+                          //                                       Row(
+                          //                                         mainAxisAlignment:
+                          //                                             MainAxisAlignment
+                          //                                                 .spaceBetween,
+                          //                                         children: [
+                          //                                           Column(
+                          //                                             children: [
+                          //                                               Container(
+                          //                                                 width:
+                          //                                                     130,
+                          //                                                 child: Text(
+                          //                                                     !dataPeminjam[i].berM ? pemisahSpasi(dataPeminjam[i].jumlahPengembalian[j]) : pemisahSpasi(dataPeminjam[i].jumlahPengembalian[j]) + " M",
+                          //                                                     style: GoogleFonts.beVietnamPro(
+                          //                                                       fontWeight: FontWeight.bold,
+                          //                                                       fontSize: 15,
+                          //                                                       color: Colors.white,
+                          //                                                     ),
+                          //                                                     textAlign: TextAlign.center),
+                          //                                               ),
+                          //                                             ],
+                          //                                           ),
+                          //                                           Column(
+                          //                                             children: [
+                          //                                               Container(
+                          //                                                 width:
+                          //                                                     130,
+                          //                                                 child: Text(
+                          //                                                     pemisahSpasi(dataPeminjam[i].jamPengembalian[j]),
+                          //                                                     style: GoogleFonts.beVietnamPro(
+                          //                                                       fontWeight: FontWeight.bold,
+                          //                                                       fontSize: 15,
+                          //                                                       color: Colors.white,
+                          //                                                     ),
+                          //                                                     textAlign: TextAlign.center),
+                          //                                               ),
+                          //                                             ],
+                          //                                           ),
+                          //                                           Column(
+                          //                                             children: [
+                          //                                               Container(
+                          //                                                 width:
+                          //                                                     130,
+                          //                                                 child: Text(
+                          //                                                     pemisahSpasi(dataPeminjam[i].tanggalPengembalian[j]),
+                          //                                                     style: GoogleFonts.beVietnamPro(
+                          //                                                       fontWeight: FontWeight.bold,
+                          //                                                       fontSize: 15,
+                          //                                                       color: Colors.white,
+                          //                                                     ),
+                          //                                                     textAlign: TextAlign.center),
+                          //                                               ),
+                          //                                             ],
+                          //                                           ),
+                          //                                         ],
+                          //                                       ),
+                          //                                       SizedBox(
+                          //                                         height: 5,
+                          //                                       ),
+                          //                                     ],
+                          //                                   ),
+                          //                               ],
+                          //                             ),
+                          //                           ),
+                          //                         ],
+                          //                       ),
+                          //                     ),
                           //                   ),
                           //                 ],
                           //               ),
-                          //               Column(
-                          //                 children: [
-                          //                   Container(
-                          //                     color: Colors.blueAccent,
-                          //                     width: 130,
-                          //                     child: Text("12.00",
-                          //                         style:
-                          //                             GoogleFonts.beVietnamPro(
-                          //                           fontWeight: FontWeight.bold,
-                          //                           fontSize: 15,
-                          //                           color: Colors.white,
-                          //                         ),
-                          //                         textAlign: TextAlign.center),
-                          //                   ),
-                          //                 ],
+                          //               SizedBox(
+                          //                 height: 10,
                           //               ),
-                          //               Column(
-                          //                 children: [
-                          //                   Container(
-                          //                     color: Colors.blueAccent,
-                          //                     width: 130,
-                          //                     child: Text("02 - 03 - 2024",
-                          //                         style:
-                          //                             GoogleFonts.beVietnamPro(
-                          //                           fontWeight: FontWeight.bold,
-                          //                           fontSize: 15,
-                          //                           color: Colors.white,
-                          //                         ),
-                          //                         textAlign: TextAlign.center),
-                          //                   ),
-                          //                 ],
+                          //               Container(
+                          //                 width: 1620,
+                          //                 height: 4,
+                          //                 color: const Color.fromARGB(
+                          //                     255, 71, 71, 75),
+                          //               ),
+                          //               SizedBox(
+                          //                 height: 10,
                           //               ),
                           //             ],
                           //           ),
-                          //           SizedBox(
-                          //             height: 15,
-                          //           ),
-                          //           Row(
-                          //             mainAxisAlignment:
-                          //                 MainAxisAlignment.spaceBetween,
-                          //             children: [
-                          //               Column(
-                          //                 children: [
-                          //                   Container(
-                          //                     color: Colors.blueAccent,
-                          //                     width: 130,
-                          //                     child: Text("20",
-                          //                         style:
-                          //                             GoogleFonts.beVietnamPro(
-                          //                           fontWeight: FontWeight.bold,
-                          //                           fontSize: 15,
-                          //                           color: Colors.white,
-                          //                         ),
-                          //                         textAlign: TextAlign.center),
-                          //                   ),
-                          //                 ],
-                          //               ),
-                          //               Column(
-                          //                 children: [
-                          //                   Container(
-                          //                     color: Colors.blueAccent,
-                          //                     width: 130,
-                          //                     child: Text("12.00",
-                          //                         style:
-                          //                             GoogleFonts.beVietnamPro(
-                          //                           fontWeight: FontWeight.bold,
-                          //                           fontSize: 15,
-                          //                           color: Colors.white,
-                          //                         ),
-                          //                         textAlign: TextAlign.center),
-                          //                   ),
-                          //                 ],
-                          //               ),
-                          //               Column(
-                          //                 children: [
-                          //                   Container(
-                          //                     color: Colors.blueAccent,
-                          //                     width: 130,
-                          //                     child: Text("02 - 03 - 2024",
-                          //                         style:
-                          //                             GoogleFonts.beVietnamPro(
-                          //                           fontWeight: FontWeight.bold,
-                          //                           fontSize: 15,
-                          //                           color: Colors.white,
-                          //                         ),
-                          //                         textAlign: TextAlign.center),
-                          //                   ),
-                          //                 ],
-                          //               ),
-                          //             ],
-                          //           ),
-                          //         ],
-                          //       ),
+                          //       ],
                           //     ),
-                          //   ],
+                          //   ),
                           // ),
-                          // SizedBox(
-                          //   height: 10,
-                          // ),
-                          // Container(
-                          //   width: 1620,
-                          //   height: 4,
-                          //   color: const Color.fromARGB(255, 71, 71, 75),
-                          // )
                         ],
                       ),
                     ),

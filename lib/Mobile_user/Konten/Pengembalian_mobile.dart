@@ -976,8 +976,6 @@ class _Pengembalian_MobileState extends State<Pengembalian_Mobile> {
                                                                           ),
 
                                                                           Container(
-                                                                            color:
-                                                                                Colors.brown,
                                                                             height:
                                                                                 70,
                                                                             width:
@@ -999,9 +997,23 @@ class _Pengembalian_MobileState extends State<Pengembalian_Mobile> {
                                                                                             ),
                                                                                           ),
                                                                                           Text(
-                                                                                            ": " + NamaPeminjamSekarang,
+                                                                                            ": ",
                                                                                             style: GoogleFonts.beVietnamPro(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
-                                                                                            textAlign: TextAlign.start,
+                                                                                          ),
+                                                                                          Container(
+                                                                                            width: 102,
+                                                                                            child: SingleChildScrollView(
+                                                                                              scrollDirection: Axis.horizontal,
+                                                                                              child: Row(
+                                                                                                children: [
+                                                                                                  Text(
+                                                                                                    NamaPeminjamSekarang,
+                                                                                                    style: GoogleFonts.beVietnamPro(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                                                    textAlign: TextAlign.start,
+                                                                                                  ),
+                                                                                                ],
+                                                                                              ),
+                                                                                            ),
                                                                                           ),
                                                                                         ],
                                                                                       ),
@@ -1037,7 +1049,6 @@ class _Pengembalian_MobileState extends State<Pengembalian_Mobile> {
                                                                                             style: GoogleFonts.beVietnamPro(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
                                                                                           ),
                                                                                           Container(
-                                                                                            color: Colors.amber,
                                                                                             width: 102,
                                                                                             child: SingleChildScrollView(
                                                                                               scrollDirection: Axis.horizontal,
@@ -1500,7 +1511,7 @@ class _Pengembalian_MobileState extends State<Pengembalian_Mobile> {
                                                                                                                                                       docBarangYangDipinjamSekarang = KumpilanId[i].toString();
                                                                                                                                                       //function untuk membaca nama barang berkode yang dipilih (akan dikembalikan oleh user)
                                                                                                                                                       int looping = 0;
-                                                                                                                                                       await FirebaseFirestore.instance.collection("Barang").doc( KumpilanId[i].toString()).collection("BarangBarang").get().then((QuerySnapshot value) {
+                                                                                                                                                      await FirebaseFirestore.instance.collection("Barang").doc(KumpilanId[i].toString()).collection("BarangBarang").get().then((QuerySnapshot value) {
                                                                                                                                                         value.docs.forEach((element) {
                                                                                                                                                           if (looping == a) {
                                                                                                                                                             kodeAtauJumlahBarangYangDikembalikan = element["Kode"];

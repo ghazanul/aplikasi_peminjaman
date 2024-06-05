@@ -556,7 +556,6 @@ class _Peminjaman_MobileState extends State<Peminjaman_mobile> {
                                                                                         child: Row(
                                                                                           children: [
                                                                                             Container(
-                                                                                              
                                                                                               child: Column(
                                                                                                 children: [
                                                                                                   if (KumpulanKode[i]) ...[
@@ -910,7 +909,6 @@ class _Peminjaman_MobileState extends State<Peminjaman_mobile> {
                                                                                                                                 decoration: BoxDecoration(
                                                                                                                                   borderRadius: BorderRadius.circular(5),
                                                                                                                                   color: Color.fromARGB(255, 250, 208, 7),
-                                                                                                                                  
                                                                                                                                 ),
                                                                                                                                 height: 50,
                                                                                                                                 width: 157,
@@ -1612,7 +1610,6 @@ class _Peminjaman_MobileState extends State<Peminjaman_mobile> {
                                                     ),
 
                                                     Container(
-                                                      
                                                       width: 260,
                                                       height: 60,
                                                       child: ListView(
@@ -1638,9 +1635,7 @@ class _Peminjaman_MobileState extends State<Peminjaman_mobile> {
                                                                       ),
                                                                     ),
                                                                     Text(
-                                                                      ": " +
-                                                                          NamaPeminjamController
-                                                                              .text,
+                                                                      ": ",
                                                                       style: GoogleFonts.beVietnamPro(
                                                                           fontSize:
                                                                               12,
@@ -1648,9 +1643,25 @@ class _Peminjaman_MobileState extends State<Peminjaman_mobile> {
                                                                               .bold,
                                                                           color:
                                                                               Colors.white),
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .start,
+                                                                    ),
+                                                                    Container(
+                                                                      width:
+                                                                          130,
+                                                                      child:
+                                                                          SingleChildScrollView(
+                                                                        scrollDirection:
+                                                                            Axis.horizontal,
+                                                                        child:
+                                                                            Row(
+                                                                          children: [
+                                                                            Text(
+                                                                              NamaPeminjamController.text,
+                                                                              style: GoogleFonts.beVietnamPro(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                              textAlign: TextAlign.start,
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
                                                                     ),
                                                                   ],
                                                                 ),
@@ -1862,6 +1873,8 @@ class _Peminjaman_MobileState extends State<Peminjaman_mobile> {
                                                             NoTelponController
                                                                 .text = "";
                                                             KumpulanSatuanMeterYangDipinjam
+                                                                .clear();
+                                                            KumpulanSekaliPakaiDiPinjam
                                                                 .clear();
                                                             BarangYangDipinjam
                                                                 .clear();

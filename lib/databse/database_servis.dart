@@ -60,7 +60,8 @@ class DatabaseServie {
     await barangCollection.get().then((QuerySnapshot snapshot) {
       snapshot.docs.forEach((element) {
         if (int.parse(element['Id'].toString()) >= id) {
-          id = int.parse(element['Id'].toString()) + 1; //+ 1 untuk memisahkan tiap data yang masuk 
+          id = int.parse(element['Id'].toString()) +
+              1; //+ 1 untuk memisahkan tiap data yang masuk
         }
       });
     });
@@ -278,6 +279,7 @@ class DatabaseServie {
     int jumlahbarang = 0;
     String idBarangYangDiUpdate = "";
 
+    //mengambil nilai id user
     await userCollection.get().then((value) => value.docs.forEach((element) {
           if (NamaPeminjam == element["Nama"] &&
               NoTelponPeminjam == element["NoTelpon"]) {
@@ -325,17 +327,20 @@ class DatabaseServie {
         });
 
         //mengambil jumlahataukodebarang dari database (keperluan peminjaman barang tidak berkode dengan nama sama)
-        await userCollection
-            .doc(id.toString())
-            .collection("BarangBarang")
-            .get()
-            .then((value) => value.docs.forEach((element) {
-                  if (Barang[i] == element["NamaBarang"] && !Berkode[i]) {
-                    jumlahbarang =
-                        int.parse(element["JumlahatauKodeBarang"].toString()) +
-                            int.parse(jumlahBarang[i].toString());
-                  }
-                }));
+        if (!sekaliPakai[i]) {
+          await userCollection
+              .doc(id.toString())
+              .collection("BarangBarang")
+              .get()
+              .then((value) => value.docs.forEach((element) {
+                    if (Barang[i] == element["NamaBarang"] && !Berkode[i]) {
+                      jumlahbarang = int.parse(
+                              element["JumlahatauKodeBarang"].toString()) +
+                          int.parse(jumlahBarang[i].toString());
+                    }
+                  }));
+        }
+
         //melakukan pengecekan normal
         if (!sekaliPakai[i]) {
           if (Berkode[i]) {
@@ -465,6 +470,7 @@ class DatabaseServie {
       if (Berkode[i]) {
         //barang berkode
         await ReportCollection.doc(id.toString()).set({
+          "id": id,
           "NamaPeminjam": Namapeminjam,
           "NoTelpon": NoTelpon,
           "NamaBarang": NamaBarang[i],
@@ -504,6 +510,7 @@ class DatabaseServie {
           });
         } else {
           await ReportCollection.doc(id.toString()).set({
+            "id": id,
             "NamaPeminjam": Namapeminjam,
             "NoTelpon": NoTelpon,
             "NamaBarang": NamaBarang[i],
