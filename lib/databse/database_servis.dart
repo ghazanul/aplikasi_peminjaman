@@ -89,7 +89,7 @@ class DatabaseServie {
       }));
   }
 
-  //edit Barang Berkode
+  //tambah Barang Berkode
   EditBarangBerkode(
     int id,
     String KodeBarang,
@@ -117,7 +117,7 @@ class DatabaseServie {
     DataBarang.update({"JumlahTotalBarang": JumlahBarang});
   }
 
-  //edit Barang Tidak Berkode
+  //tambah Barang Tidak Berkode
   EditBarangTidakBerkode(
     int id,
     int JumlahBarang,
@@ -155,7 +155,7 @@ class DatabaseServie {
     await barangCollection.doc(id.toString()).delete();
   }
 
-  //hapus Barang satu persatu atau  hanya hapus berkode
+  //hapus Barang berkode
   HapusSatuan(int id, String KodeBarang) async {
     await barangCollection
         .doc(id.toString())
@@ -169,17 +169,31 @@ class DatabaseServie {
         {"JumlahTotalBarang": snapshot['JumlahTotalBarang'] - 1});
   }
 
-  //edit barang
+  //edit kategori barang
   EditBarang(String NamaBarang, String Gambar, bool Berkode, int id,
-      bool SatuanMeter, bool sekaliPakai) async {
-    await barangCollection.doc(id.toString()).update({
-      "Nama": NamaBarang,
-      "Gambar": Gambar,
-      "JumlahTotalBarang": 0,
-      "JumlahTerpakai": 0,
-      "Berkode": Berkode,
-      "SatuanMeter": SatuanMeter,
-      "SekaliPakai": sekaliPakai,
+      bool SatuanMeter, bool sekaliPakai, int jumlahTotalBarang, int JumlahTerpakai) async {
+    await barangCollection.doc(id.toString()).get().then((value) async {
+      if (Berkode == value["Berkode"]) {
+        await barangCollection.doc(id.toString()).update({
+          "Nama": NamaBarang,
+          "Gambar": Gambar,
+          "JumlahTotalBarang": jumlahTotalBarang,
+          "JumlahTerpakai": JumlahTerpakai,
+          "Berkode": Berkode,
+          "SatuanMeter": SatuanMeter,
+          "SekaliPakai": sekaliPakai,
+        });
+      } else {//jika tipe barang di ubah menjadi barang berkode maka jumlahtotal barang dan jumlahterpakai berubah menjadi 0
+        await barangCollection.doc(id.toString()).update({
+          "Nama": NamaBarang,
+          "Gambar": Gambar,
+          "JumlahTotalBarang": 0,
+          "JumlahTerpakai": 0,
+          "Berkode": Berkode,
+          "SatuanMeter": SatuanMeter,
+          "SekaliPakai": sekaliPakai,
+        });
+      }
     });
     print("edit berhasil");
   }
@@ -193,7 +207,7 @@ class DatabaseServie {
       if (int.parse(snapshot['JumlahTotalBarang'].toString()) -
               int.parse(snapshot['JumlahTerpakai'].toString()) <
           JumlahBarangDiPinjam) {
-        print("Pinjaman Jumlah Sudah Melempaui Ketersediyaan Barang");
+        print("Pinjaman Jumlah Sudah Melempaui Ketersediaan Barang");
       } else {
         int JumlahTerpakaiSekarang =
             int.parse(snapshot["JumlahTerpakai"].toString()) +
@@ -203,7 +217,7 @@ class DatabaseServie {
     } else {
       if (int.parse(snapshot['JumlahTotalBarang'].toString()) <
           JumlahBarangDiPinjam) {
-        print("Pengambilan  Gagal Jumlah Sudah Melempaui Ketersediyaan Barang");
+        print("Pengambilan  Gagal Jumlah Sudah Melempaui Ketersediaan Barang");
       } else {
         int JumlahTotalBarangSekarang =
             int.parse(snapshot["JumlahTotalBarang"].toString()) -
@@ -534,7 +548,7 @@ class DatabaseServie {
     }
   }
 
-  //laporan pengembalian
+  //laporan pengambilan data yang berhubungan dengan ui
   ReportPengembalian(String namaPeminjam, String namaBarang,
       String jumlahYangDiKembalikan) async {
     print("NAMA PEMINJAM : " + namaPeminjam);
@@ -615,7 +629,9 @@ class DatabaseServie {
         PercobaanPengembalian++;
         await ReportCollection.doc(idYangDipilih.toString()).update({
           "PercobaanPengembalian": PercobaanPengembalian,
-          "jumlahPengembalian": 1.toString(),
+          "jumlahPengembalian": FieldValue.arrayUnion([
+            1.toString() + " ",
+          ]),
           "jamPengembalian": FieldValue.arrayUnion([
             jamSekarang +
                 ":" +
@@ -626,7 +642,6 @@ class DatabaseServie {
           "tanggalPengembalian": FieldValue.arrayUnion(
               [date.toString() + " " + PercobaanPengembalian.toString()]),
         });
-        print("bacek");
       } else {
         //untuk barang tidak berkode
         PercobaanPengembalian++;
@@ -647,7 +662,6 @@ class DatabaseServie {
           "tanggalPengembalian": FieldValue.arrayUnion(
               [date.toString() + " " + PercobaanPengembalian.toString()]),
         });
-        print("kiruk");
       }
     }
 

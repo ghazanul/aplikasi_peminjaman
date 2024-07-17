@@ -187,8 +187,6 @@ class _Pengembalian_webState extends State<Pengembalian_web> {
   Widget build(BuildContext context) {
     TextEditingController JumlahYangDikembalikanController =
         new TextEditingController();
-    TextEditingController JumlahYangRusakController =
-        new TextEditingController();
     TextEditingController NamaPeminjamController = new TextEditingController();
     TextEditingController NoTelponController = new TextEditingController();
     return Column(
@@ -1157,7 +1155,8 @@ class _Pengembalian_webState extends State<Pengembalian_web> {
                                                                                         if (isBarangBerkodeYangAkanDikembalikan) {
                                                                                           //proses mengatur jumlah terpakai agar berkurang untyuk barang berkode
                                                                                           int nilaiJumlahTerpakaiSekarang = 0;
-                                                                                          await FirebaseFirestore.instance.collection("Barang").doc(docBarangYangDipinjamSekarang).get().then((value) => nilaiJumlahTerpakaiSekarang = value["JumlahTerpakai"]);
+                                                                                          await FirebaseFirestore.instance.collection("Barang").doc(docBarangYangDipinjamSekarang).get()
+                                                                                          .then((value) => nilaiJumlahTerpakaiSekarang = value["JumlahTerpakai"]);
                                                                                           await FirebaseFirestore.instance.collection("Barang").doc(docBarangYangDipinjamSekarang).update({
                                                                                             "JumlahTerpakai": nilaiJumlahTerpakaiSekarang - 1
                                                                                           });
@@ -1166,8 +1165,10 @@ class _Pengembalian_webState extends State<Pengembalian_web> {
                                                                                           //proses mengatur jumlah terpakai agar berkurang untyuk barang tidak berkode
                                                                                           int nilaiJumlahTerpakaiSekarang = 0;
                                                                                           int jumlahPinjamanUser = 0;
-                                                                                          await FirebaseFirestore.instance.collection("Barang").doc(docBarangYangDipinjamSekarang).get().then((value) => nilaiJumlahTerpakaiSekarang = value["JumlahTerpakai"]);
-                                                                                          await FirebaseFirestore.instance.collection("User").doc(DocPeminjamSekarang).collection("BarangBarang").doc(idBarangYangDikembalikan).get().then((value) => jumlahPinjamanUser = int.parse(value["JumlahatauKodeBarang"].toString()));
+                                                                                          await FirebaseFirestore.instance.collection("Barang").doc(docBarangYangDipinjamSekarang).get().
+                                                                                          then((value) => nilaiJumlahTerpakaiSekarang = value["JumlahTerpakai"]);
+                                                                                          await FirebaseFirestore.instance.collection("User").doc(DocPeminjamSekarang).collection("BarangBarang").doc(
+                                                                                            idBarangYangDikembalikan).get().then((value) => jumlahPinjamanUser = int.parse(value["JumlahatauKodeBarang"].toString()));
                                                                                           print(jumlahPinjamanUser.toString() + " - " + kodeAtauJumlahBarangYangDikembalikan.toString() + "");
                                                                                           print("fffff :" + idBarangYangDikembalikan);
                                                                                           if (jumlahPinjamanUser >= int.parse(kodeAtauJumlahBarangYangDikembalikan.toString())) {
@@ -1175,23 +1176,20 @@ class _Pengembalian_webState extends State<Pengembalian_web> {
                                                                                             await FirebaseFirestore.instance.collection("Barang").doc(docBarangYangDipinjamSekarang).update({
                                                                                               "JumlahTerpakai": nilaiJumlahTerpakaiSekarang - int.parse(kodeAtauJumlahBarangYangDikembalikan.toString())
                                                                                             });
-
                                                                                             //mengurangi jumlahataukodebarang di database USER
-                                                                                            await FirebaseFirestore.instance.collection("User").doc(DocPeminjamSekarang).collection("BarangBarang").doc(idBarangYangDikembalikan).update({
+                                                                                            await FirebaseFirestore.instance.collection("User").doc(DocPeminjamSekarang).collection("BarangBarang").doc(
+                                                                                              idBarangYangDikembalikan).update({
                                                                                               "JumlahatauKodeBarang": jumlahPinjamanUser - int.parse(kodeAtauJumlahBarangYangDikembalikan.toString())
                                                                                             });
                                                                                             peminjamanGagalKarenaJumlahYangDiKembalikanKebanyakan = true; // KODE TIDAK EFISIEN
                                                                                             print("Mengurangi barang terpakai berhasil");
-
                                                                                             //menghapus field barang di BarangBarang ketika kodeataujumlahpinjaman == 0
-                                                                                            await FirebaseFirestore.instance.collection("User").doc(DocPeminjamSekarang).collection("BarangBarang").doc(idBarangYangDikembalikan).get().then((value) => jumlahPinjamanUser = int.parse(value["JumlahatauKodeBarang"].toString()));
-
+                                                                                            await FirebaseFirestore.instance.collection("User").doc(DocPeminjamSekarang).collection("BarangBarang").doc(
+                                                                                              idBarangYangDikembalikan).get().then((value) => jumlahPinjamanUser = int.parse(value["JumlahatauKodeBarang"].toString()));
                                                                                             if (jumlahPinjamanUser == 0) {
                                                                                               peminjamanGagalKarenaJumlahYangDiKembalikanKebanyakan = false;
                                                                                             }
                                                                                           } else {
-                                                                                            //snackbar barang yang dikembalikan berlebih dari yang dipinjam
-
                                                                                             peminjamanGagalKarenaJumlahYangDiKembalikanKebanyakan = true;
                                                                                             munculPopUpPengembalianKebanyakan = true;
                                                                                             print("Pengembalian Gagal Dek");
@@ -1201,7 +1199,6 @@ class _Pengembalian_webState extends State<Pengembalian_web> {
                                                                                         }
 
                                                                                         print(peminjamanGagalKarenaJumlahYangDiKembalikanKebanyakan);
-
                                                                                         if (peminjamanGagalKarenaJumlahYangDiKembalikanKebanyakan == false) {
                                                                                           //penghapusan data di database user
                                                                                           await FirebaseFirestore.instance.collection("User").doc(DocPeminjamSekarang).collection("BarangBarang").doc(idBarangYangDikembalikan).delete();
@@ -1215,7 +1212,8 @@ class _Pengembalian_webState extends State<Pengembalian_web> {
 
                                                                                           //mengubah data barang berkode menjadi False( non aktif)
                                                                                           if (isBarangBerkodeYangAkanDikembalikan) {
-                                                                                            await FirebaseFirestore.instance.collection("Barang").doc(docBarangYangDipinjamSekarang).collection("BarangBarang").doc(KodeAtauJumlahYangDikembalikan[0].toString()).update({
+                                                                                            await FirebaseFirestore.instance.collection("Barang").doc(docBarangYangDipinjamSekarang).collection("BarangBarang").
+                                                                                            doc(KodeAtauJumlahYangDikembalikan[0].toString()).update({
                                                                                               "Status": false
                                                                                             });
                                                                                             print("Mengubah status barang berhasil");

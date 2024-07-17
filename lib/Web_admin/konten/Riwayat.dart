@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_interpolation_to_compose_strings
 
 import 'dart:async';
+import 'dart:html';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_picker_web/image_picker_web.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Riwayat extends StatefulWidget {
   const Riwayat({super.key});
@@ -69,7 +71,6 @@ class _RiwayatState extends State<Riwayat> {
               DataSementar.NoTelpon = element["NoTelpon"];
               DataSementar.NamaBarang = element["NamaBarang"];
               DataSementar.berM = element["berM"];
-
               DataSementar.percobaanPeminjaman = element["percobaanPeminjaman"];
               //ketika telah berisi
               for (int i = 0;
@@ -82,7 +83,6 @@ class _RiwayatState extends State<Riwayat> {
                 DataSementar.TanggalPeminjman.add(
                     element["tanggalPeminjaman"][i]);
               }
-
               DataSementar.PercobaanPengembalian =
                   element["PercobaanPengembalian"];
               //kalo pengembalian user tidak ada maka (-) isinya
@@ -97,15 +97,12 @@ class _RiwayatState extends State<Riwayat> {
                     i++) {
                   DataSementar.jumlahPengembalian
                       .add(element["jumlahPengembalian"][i]);
-
                   DataSementar.jamPengembalian
                       .add(element["jamPengembalian"][i]);
-
                   DataSementar.tanggalPengembalian
                       .add(element["tanggalPengembalian"][i]);
                 }
               }
-
               dataPeminjam.add(DataSementar);
             }));
   }
@@ -251,7 +248,6 @@ class _RiwayatState extends State<Riwayat> {
                             height: 565,
                             child: SingleChildScrollView(
                               child: Column(
-
                                 children: [
                                   for (int i = 0; i < dataPeminjam.length; i++)
                                     Container(
@@ -301,7 +297,8 @@ class _RiwayatState extends State<Riwayat> {
                                                 height: 70,
                                                 child: Center(
                                                   child: Text(
-                                                      dataPeminjam[i].NamaBarang,
+                                                      dataPeminjam[i]
+                                                          .NamaBarang,
                                                       style: GoogleFonts
                                                           .beVietnamPro(
                                                         fontWeight:
@@ -338,37 +335,33 @@ class _RiwayatState extends State<Riwayat> {
                                                               Column(
                                                                 children: [
                                                                   Container(
-
                                                                     width: 130,
-                                                                    child: Text( !dataPeminjam[i].berM ?
-                                                                        pemisahSpasi(dataPeminjam[i]
-                                                                                .JumlahPeminjaman[
-                                                                            j]) : pemisahSpasi(dataPeminjam[i]
-                                                                                .JumlahPeminjaman[
-                                                                            j]) + " M",
+                                                                    child: Text(
+                                                                        !dataPeminjam[i].berM
+                                                                            ? pemisahSpasi(dataPeminjam[i].JumlahPeminjaman[
+                                                                                j])
+                                                                            : pemisahSpasi(dataPeminjam[i].JumlahPeminjaman[j]) +
+                                                                                " M",
                                                                         style: GoogleFonts
                                                                             .beVietnamPro(
                                                                           fontWeight:
                                                                               FontWeight.bold,
                                                                           fontSize:
                                                                               15,
-                                                                          color: Colors
-                                                                              .white,
+                                                                          color:
+                                                                              Colors.white,
                                                                         ),
                                                                         textAlign:
-                                                                            TextAlign
-                                                                                .center),
+                                                                            TextAlign.center),
                                                                   ),
                                                                 ],
                                                               ),
                                                               Column(
                                                                 children: [
                                                                   Container(
-
                                                                     width: 130,
                                                                     child: Text(
-                                                                        pemisahSpasi(dataPeminjam[i]
-                                                                                .KodeBarang[
+                                                                        pemisahSpasi(dataPeminjam[i].KodeBarang[
                                                                             j]),
                                                                         style: GoogleFonts
                                                                             .beVietnamPro(
@@ -376,23 +369,20 @@ class _RiwayatState extends State<Riwayat> {
                                                                               FontWeight.bold,
                                                                           fontSize:
                                                                               15,
-                                                                          color: Colors
-                                                                              .white,
+                                                                          color:
+                                                                              Colors.white,
                                                                         ),
                                                                         textAlign:
-                                                                            TextAlign
-                                                                                .center),
+                                                                            TextAlign.center),
                                                                   ),
                                                                 ],
                                                               ),
                                                               Column(
                                                                 children: [
                                                                   Container(
-
                                                                     width: 130,
                                                                     child: Text(
-                                                                        pemisahSpasi(dataPeminjam[i]
-                                                                                .Jampeminjam[
+                                                                        pemisahSpasi(dataPeminjam[i].Jampeminjam[
                                                                             j]),
                                                                         style: GoogleFonts
                                                                             .beVietnamPro(
@@ -400,23 +390,20 @@ class _RiwayatState extends State<Riwayat> {
                                                                               FontWeight.bold,
                                                                           fontSize:
                                                                               15,
-                                                                          color: Colors
-                                                                              .white,
+                                                                          color:
+                                                                              Colors.white,
                                                                         ),
                                                                         textAlign:
-                                                                            TextAlign
-                                                                                .center),
+                                                                            TextAlign.center),
                                                                   ),
                                                                 ],
                                                               ),
                                                               Column(
                                                                 children: [
                                                                   Container(
-
                                                                     width: 130,
                                                                     child: Text(
-                                                                        pemisahSpasi(dataPeminjam[i]
-                                                                                .TanggalPeminjman[
+                                                                        pemisahSpasi(dataPeminjam[i].TanggalPeminjman[
                                                                             j]),
                                                                         style: GoogleFonts
                                                                             .beVietnamPro(
@@ -424,12 +411,11 @@ class _RiwayatState extends State<Riwayat> {
                                                                               FontWeight.bold,
                                                                           fontSize:
                                                                               15,
-                                                                          color: Colors
-                                                                              .white,
+                                                                          color:
+                                                                              Colors.white,
                                                                         ),
                                                                         textAlign:
-                                                                            TextAlign
-                                                                                .center),
+                                                                            TextAlign.center),
                                                                   ),
                                                                 ],
                                                               ),
@@ -469,24 +455,23 @@ class _RiwayatState extends State<Riwayat> {
                                                                 children: [
                                                                   Container(
                                                                     width: 130,
-                                                                    child: Text(!dataPeminjam[i].berM ?
-                                                                        pemisahSpasi(dataPeminjam[i]
-                                                                                .jumlahPengembalian[
-                                                                            j]) : pemisahSpasi(dataPeminjam[i]
-                                                                                .jumlahPengembalian[
-                                                                            j]) + " M",
+                                                                    child: Text(
+                                                                        !dataPeminjam[i].berM
+                                                                            ? pemisahSpasi(dataPeminjam[i].jumlahPengembalian[
+                                                                                j])
+                                                                            : pemisahSpasi(dataPeminjam[i].jumlahPengembalian[j]) +
+                                                                                " M",
                                                                         style: GoogleFonts
                                                                             .beVietnamPro(
                                                                           fontWeight:
                                                                               FontWeight.bold,
                                                                           fontSize:
                                                                               15,
-                                                                          color: Colors
-                                                                              .white,
+                                                                          color:
+                                                                              Colors.white,
                                                                         ),
                                                                         textAlign:
-                                                                            TextAlign
-                                                                                .center),
+                                                                            TextAlign.center),
                                                                   ),
                                                                 ],
                                                               ),
@@ -495,8 +480,7 @@ class _RiwayatState extends State<Riwayat> {
                                                                   Container(
                                                                     width: 130,
                                                                     child: Text(
-                                                                        pemisahSpasi(dataPeminjam[i]
-                                                                                .jamPengembalian[
+                                                                        pemisahSpasi(dataPeminjam[i].jamPengembalian[
                                                                             j]),
                                                                         style: GoogleFonts
                                                                             .beVietnamPro(
@@ -504,12 +488,11 @@ class _RiwayatState extends State<Riwayat> {
                                                                               FontWeight.bold,
                                                                           fontSize:
                                                                               15,
-                                                                          color: Colors
-                                                                              .white,
+                                                                          color:
+                                                                              Colors.white,
                                                                         ),
                                                                         textAlign:
-                                                                            TextAlign
-                                                                                .center),
+                                                                            TextAlign.center),
                                                                   ),
                                                                 ],
                                                               ),
@@ -518,8 +501,7 @@ class _RiwayatState extends State<Riwayat> {
                                                                   Container(
                                                                     width: 130,
                                                                     child: Text(
-                                                                        pemisahSpasi(dataPeminjam[i]
-                                                                                .tanggalPengembalian[
+                                                                        pemisahSpasi(dataPeminjam[i].tanggalPengembalian[
                                                                             j]),
                                                                         style: GoogleFonts
                                                                             .beVietnamPro(
@@ -527,12 +509,11 @@ class _RiwayatState extends State<Riwayat> {
                                                                               FontWeight.bold,
                                                                           fontSize:
                                                                               15,
-                                                                          color: Colors
-                                                                              .white,
+                                                                          color:
+                                                                              Colors.white,
                                                                         ),
                                                                         textAlign:
-                                                                            TextAlign
-                                                                                .center),
+                                                                            TextAlign.center),
                                                                   ),
                                                                 ],
                                                               ),
@@ -567,8 +548,6 @@ class _RiwayatState extends State<Riwayat> {
                               ),
                             ),
                           ),
-
-
 
                           //=========================update sudah ada batasan tinggi dari intem-peritem
                           ///Container(
@@ -1082,31 +1061,41 @@ class _RiwayatState extends State<Riwayat> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Color.fromARGB(255, 71, 71, 75)),
-                    width: 215,
-                    height: 61,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 13),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Image.asset(
-                            "assets/images/xls.png",
-                            height: 44,
-                            width: 44,
-                          ),
-                          Text(
-                            "Download Data",
-                            style: GoogleFonts.beVietnamPro(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                              color: Colors.white,
+                  GestureDetector(
+                    onTap: () async {
+                      const url = 'https://docs.google.com/spreadsheets/d/118BhqXtaOX_Tj40dmYVS9LJlDp-KhacHWiLS_DYeig0/edit#gid=0';
+                      if (await canLaunch(url)) {
+                        await launch(url);
+                      } else {
+                        print("Could not launch $url");
+                      }
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Color.fromARGB(255, 71, 71, 75)),
+                      width: 215,
+                      height: 61,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 13),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Image.asset(
+                              "assets/images/xls.png",
+                              height: 44,
+                              width: 44,
                             ),
-                          )
-                        ],
+                            Text(
+                              "Download Data",
+                              style: GoogleFonts.beVietnamPro(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color: Colors.white,
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),

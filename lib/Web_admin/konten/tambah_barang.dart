@@ -23,6 +23,9 @@ class tambah_barang extends StatefulWidget {
   State<tambah_barang> createState() => _tambah_barangState();
 }
 
+///eror ketika ubah tipe barang pada fitur edit
+///bug ketika ubah nama dan gambar total jumlah barang ikut ke riset
+
 class _tambah_barangState extends State<tambah_barang> {
   FilePickerResult? filePilihan;
   String? urlImage;
@@ -123,7 +126,6 @@ class _tambah_barangState extends State<tambah_barang> {
 
     iseditImage = false;
 
-    print("edit barang beerhasil banget " + filePilihan!.files.first.name);
   }
 
   uploadNamaFileFirestore(String namaBarang) async {
@@ -358,6 +360,8 @@ class _tambah_barangState extends State<tambah_barang> {
         .get()
         .then((value) {
       EditurlImage = value["Gambar"];
+      editJumlahTotalBarang = value["JumlahTotalBarang"];
+      editJumlahTerpakai = value ["JumlahTerpakai"];
       EditNamaBarang.text = value["Nama"];
       SatuanMeter = value["SatuanMeter"];
       EditSekaliPakai = value["SekaliPakai"];
@@ -374,10 +378,10 @@ class _tambah_barangState extends State<tambah_barang> {
   }
 
   UbahBarang(String NamaBarang, String Gambar, bool Berkode, int id,
-      bool SatuanMeter, bool sekaliPakai) async {
+      bool SatuanMeter, bool sekaliPakai, int jumlahTotalBarang, int JumlahTerpakai) async {
     print("panjang data : " + KumpilanId.length.toString());
     DatabaseServie()
-        .EditBarang(NamaBarang, Gambar, Berkode, id, SatuanMeter, sekaliPakai);
+        .EditBarang(NamaBarang, Gambar, Berkode, id, SatuanMeter, sekaliPakai, jumlahTotalBarang, JumlahTerpakai);
     refreshData();
     setState(() {});
   }
@@ -398,6 +402,8 @@ class _tambah_barangState extends State<tambah_barang> {
   String idFileEdit = "";
 
   TextEditingController EditNamaBarang = new TextEditingController();
+  int editJumlahTotalBarang = 0;
+  int editJumlahTerpakai = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -413,7 +419,6 @@ class _tambah_barangState extends State<tambah_barang> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ///SizedBox(height: MediaQuery.of(context).size.height*0.1 ),
-
                 Center(
                   child: Container(
                     decoration: BoxDecoration(
@@ -912,7 +917,7 @@ class _tambah_barangState extends State<tambah_barang> {
 
                                                                                                     //proses penambahan
                                                                                                     if (EditNamaBarang.text != "" && EditurlImage != "") {
-                                                                                                      await UbahBarang(EditNamaBarang.text.toString(), EditurlImage!.toString(), berkode, KumpilanId[i], SatuanMeter, EditSekaliPakai);
+                                                                                                      await UbahBarang(EditNamaBarang.text.toString(), EditurlImage!.toString(), berkode, KumpilanId[i], SatuanMeter, EditSekaliPakai, editJumlahTotalBarang, editJumlahTerpakai);
                                                                                                       //edit di database kumpulanNamaFile
                                                                                                       await editNamaFileFirestore(idFileEdit, EditNamaBarang.text);
                                                                                                       //untuk tutup pop up

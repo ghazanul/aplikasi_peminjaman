@@ -156,9 +156,7 @@ class _Home_WebState extends State<Barang_User> {
     }
   }
 
-  EditBarangTidakBerkode(int id, int JumlahBarang) async {
-    await DatabaseServie().EditBarangTidakBerkode(id, JumlahBarang);
-  }
+  
 
   @override
   Widget build(BuildContext context) {

@@ -40,21 +40,7 @@ class _Home_WebState extends State<Barang> {
     print(await DatabaseServie().HitungSisaBarang(id));
   }
 
-  PinjamBarangTidakBerkode(int id, JumlahBarangDiPinjam) async {
-    DatabaseServie().PinjambarangTidakBerkode(id, JumlahBarangDiPinjam);
-  }
-
-  PinjamBarangBerkode(int id, KodeBarang) async {
-    DatabaseServie().PinjambarangBerkode(id, KodeBarang);
-  }
-
-  KembalikanBarangBerkode(int id, int KodeBarang) async {
-    DatabaseServie().KembalikanBarangBerkode(id, KodeBarang);
-  }
-
-  KembalikanBarangTidakBerkode(int id, int JumlahBarangDiKemablikan) async {
-    DatabaseServie().KembalikanBarangTidakBerkode(id, JumlahBarangDiKemablikan);
-  }
+ 
 
   List<String> KumpulanNama = [];
   List<bool> KumpulanKode = [];
@@ -390,7 +376,7 @@ class _Home_WebState extends State<Barang> {
                                                                                                                       children: [
                                                                                                                         GestureDetector(
                                                                                                                           onTap: () async {
-                                                                                                                            await EditBarangTidakBerkode(KumpilanId[i], int.parse(DataBarang.text));
+                                                                                                                            await (KumpilanId[i], int.parse(DataBarang.text));
                                                                                                                             //untuk membalikannya seperti semula
                                                                                                                             DataBarang.text = '';
                                                                                                                             Navigator.pop(context);

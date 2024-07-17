@@ -199,6 +199,7 @@ class _HeaderState extends State<Authentication> {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: TextField(
+                                obscureText: true,
                                 onChanged: (value) {
                                   setState(() {
                                     password = value;

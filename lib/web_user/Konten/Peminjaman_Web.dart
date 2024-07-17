@@ -93,28 +93,9 @@ loadingPanel(BuildContext context) {
       });
 }
 
-HapusBarangTidakBerkode(int id, int JumlahBarangYangDiHapus) async {
-  DocumentSnapshot data = await FirebaseFirestore.instance
-      .collection('Barang')
-      .doc(id.toString())
-      .get();
-  if (int.parse(data['JumlahTotalBarang'].toString()) >=
-      JumlahBarangYangDiHapus) {
-    await FirebaseFirestore.instance
-        .collection("Barang")
-        .doc(id.toString())
-        .update({
-      'JumlahTotalBarang': int.parse(data['JumlahTotalBarang'].toString()) -
-          JumlahBarangYangDiHapus
-    });
-  } else {
-    print("Penghapusan Data Tidak Sesuai");
-  }
-}
 
-EditBarangTidakBerkode(int id, int JumlahBarang) async {
-  await DatabaseServie().EditBarangTidakBerkode(id, JumlahBarang);
-}
+
+
 
 class _Peminjaman_WebState extends State<Peminjaman_Web> {
   getBarang() async {
@@ -1788,7 +1769,7 @@ class _Peminjaman_WebState extends State<Peminjaman_Web> {
                                                                 NamapeminjamYangDigunkan =
                                                                 NamaPeminjamController
                                                                     .text
-                                                                    .toLowerCase();
+                                                                    .toLowerCase();//membuat huruf menjadi kecil
                                                             print(
                                                                 NamapeminjamYangDigunkan);
                                                             //Memasukkan data ke database user
